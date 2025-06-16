@@ -5,7 +5,7 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.app.fragments.R;
-import com.app.fragments.ui.fragment.MainFragment;
+import com.app.fragments.ui.fragment.XgpManejoMelhoramentoFragment;
 
 public class MainActivity extends AppCompatActivity {
     public MainActivity() {
@@ -18,7 +18,7 @@ public class MainActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
                     .setReorderingAllowed(true)
-                    .add(R.id.fragment_container_view, MainFragment.class, null).commit();
+                    .add(R.id.fragment_container_view_xgp_manejo_melhoramento, XgpManejoMelhoramentoFragment.class, null).commit();
         }
     }
 }

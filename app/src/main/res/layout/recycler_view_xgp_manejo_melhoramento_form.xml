@@ -18,11 +18,11 @@
         android:padding="16dp">
 
         <TextView
-            android:id="@+id/title"
+            android:id="@+id/nome_melhoramento"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:importantForAccessibility="yes"
-            android:text="Cadastro"
+            android:text="Teste"
             android:textColor="#000000"
             android:textSize="20sp"
             android:textStyle="bold"
@@ -32,7 +32,7 @@
             tools:ignore="HardcodedText" />
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/textInputContainerOne"
+            android:id="@+id/notaContainer"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
@@ -41,11 +41,11 @@
             app:boxStrokeColor="#6200EE"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/title"
+            app:layout_constraintTop_toBottomOf="@id/nome_melhoramento"
             tools:ignore="HardcodedText">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/textInputFieldOne"
+                android:id="@+id/nota"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:importantForAccessibility="yes"
@@ -53,7 +53,7 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/textInputContainerTwo"
+            android:id="@+id/excessaoContainer"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
@@ -62,11 +62,11 @@
             app:boxStrokeColor="#6200EE"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/textInputContainerOne"
+            app:layout_constraintTop_toBottomOf="@id/notaContainer"
             tools:ignore="HardcodedText">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/textInputFieldTwo"
+                android:id="@+id/excessao"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:importantForAccessibility="yes"
@@ -74,7 +74,7 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/textInputContainerThree"
+            android:id="@+id/observacaoContainer"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
@@ -83,11 +83,11 @@
             app:boxStrokeColor="#6200EE"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/textInputContainerTwo"
+            app:layout_constraintTop_toBottomOf="@id/excessaoContainer"
             tools:ignore="HardcodedText">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/textInputFieldThree"
+                android:id="@+id/observacao"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:importantForAccessibility="yes"
@@ -95,7 +95,7 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnSubmit"
+            android:id="@+id/send"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -104,7 +104,7 @@
             android:textColor="#FFFFFF"
             app:cornerRadius="5dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/textInputContainerThree"
+            app:layout_constraintTop_toBottomOf="@id/observacaoContainer"
             tools:ignore="HardcodedText" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

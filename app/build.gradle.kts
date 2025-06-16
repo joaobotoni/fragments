@@ -32,7 +32,8 @@ android {
 }
 
 dependencies {
-
+    val room_version = "2.7.1"
+    implementation("androidx.room:room-runtime:$room_version")
     implementation("com.google.android.material:material:1.11.0")
     implementation(libs.appcompat)
     implementation(libs.material)
