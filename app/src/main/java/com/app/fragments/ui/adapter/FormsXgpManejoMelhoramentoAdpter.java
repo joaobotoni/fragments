@@ -16,7 +16,9 @@ import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.List;
 
+
 public class FormsXgpManejoMelhoramentoAdpter extends RecyclerView.Adapter<FormsXgpManejoMelhoramentoAdpter.FormViewHolder> {
+
     Context context;
     List<FormsXgpManejoMelhoramentoComponents> list;
     public FormsXgpManejoMelhoramentoAdpter(Context context, List<FormsXgpManejoMelhoramentoComponents> list) {
@@ -42,7 +44,7 @@ public class FormsXgpManejoMelhoramentoAdpter extends RecyclerView.Adapter<Forms
         return list.size();
     }
 
-    class FormViewHolder extends RecyclerView.ViewHolder {
+    public class FormViewHolder extends RecyclerView.ViewHolder {
         public FormViewHolder(@NonNull View itemView) {
             super(itemView);
         }

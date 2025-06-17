@@ -6,12 +6,12 @@ import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import java.util.Date;
-import java.util.UUID;
 
 @Entity
 public class XgpMelhoramento {
     @PrimaryKey
-    private UUID idMelhoramento;
+    private long idMelhoramento;
+    @ColumnInfo(name = "Nome")
     private String nome;
     @ColumnInfo(name = "Usuario_Created")
     private Date usuarioCreated;
@@ -25,10 +25,8 @@ public class XgpMelhoramento {
     @Ignore
     public XgpMelhoramento() {
     }
+
     @Ignore
-    public XgpMelhoramento(String nome) {
-        this.nome = nome;
-    }
     public XgpMelhoramento(String nome, Date usuarioCreated, Date dataCreated, Date usuarioChanged, Date dataChanged) {
         this.nome = nome;
         this.usuarioCreated = usuarioCreated;
@@ -37,11 +35,20 @@ public class XgpMelhoramento {
         this.dataChanged = dataChanged;
     }
 
-    public UUID getIdMelhoramento() {
+    public XgpMelhoramento(long idMelhoramento, String nome, Date usuarioCreated, Date dataCreated, Date usuarioChanged, Date dataChanged) {
+        this.idMelhoramento = idMelhoramento;
+        this.nome = nome;
+        this.usuarioCreated = usuarioCreated;
+        this.dataCreated = dataCreated;
+        this.usuarioChanged = usuarioChanged;
+        this.dataChanged = dataChanged;
+    }
+
+    public long getIdMelhoramento() {
         return idMelhoramento;
     }
 
-    public void setIdMelhoramento(UUID idMelhoramento) {
+    public void setIdMelhoramento(long idMelhoramento) {
         this.idMelhoramento = idMelhoramento;
     }
 
