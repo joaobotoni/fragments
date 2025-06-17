@@ -8,10 +8,10 @@ XgpMelhoramento m4 = new XgpMelhoramento("Transferência de Embriões", new Date
 ```
 # Melhoramento Detalhes
 ``` 
-XgpMelhoramentoDetalhes d1 = new XgpMelhoramentoDetalhes(1, 1, "Cruzamento com raças europeias para ganho de peso", "CE-EUR", "Baixa", "Alta", "Raças adaptadas ao clima", new Date(), new Date(), new Date(), new Date());
-XgpMelhoramentoDetalhes d2 = new XgpMelhoramentoDetalhes(2, 1, "Escolha das vacas com maior fertilidade", "SM-FERT", "Média", "Alta", "Necessário histórico reprodutivo", new Date(), new Date(), new Date(), new Date());
-XgpMelhoramentoDetalhes d3 = new XgpMelhoramentoDetalhes(3, 1, "Uso de sêmen de touros premiados", "IA-TOURO", "Alta", "Muito Alta", "Requer mão de obra técnica", new Date(), new Date(), new Date(), new Date());
-XgpMelhoramentoDetalhes d4 = new XgpMelhoramentoDetalhes(4, 1, "Implantação de embriões com ultrassonografia", "TE-ULTRA", "Alta", "Alta", "Custo elevado", new Date(), new Date(), new Date(), new Date());
+XgpMelhoramentoDetalhes detalhe1 = new XgpMelhoramentoDetalhes(1001L, 1L, "Avaliação de peso", "PES", 5, 8, null, null, new Date(), null, null);
+XgpMelhoramentoDetalhes detalhe2 = new XgpMelhoramentoDetalhes(1001L, 2L, "Qualidade da pelagem", "PEL", 6, 7, null, null, new Date(), null, null);
+XgpMelhoramentoDetalhes detalhe3 = new XgpMelhoramentoDetalhes(1002L, 1L, "Conformação corporal", "CORP", 4, 6, null, null, new Date(), null, null);
+XgpMelhoramentoDetalhes detalhe4 = new XgpMelhoramentoDetalhes(1003L, 1L, "Aptidão reprodutiva", "REP", 7, 9, null, null, new Date(), null, null);
 ```
 
 # Manejo Melhoramento
