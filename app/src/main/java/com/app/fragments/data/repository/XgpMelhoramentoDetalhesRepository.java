@@ -1,7 +1,5 @@
 package com.app.fragments.data.repository;
 
-import android.content.Context;
-
 import com.app.fragments.data.dao.XgpMelhoramentoDetalhesDao;
 import com.app.fragments.data.db.AppDatabase;
 import com.app.fragments.data.entities.XgpMelhoramentoDetalhes;
@@ -9,8 +7,7 @@ import com.app.fragments.data.entities.XgpMelhoramentoDetalhes;
 public class XgpMelhoramentoDetalhesRepository {
     private XgpMelhoramentoDetalhesDao dao;
 
-    public XgpMelhoramentoDetalhesRepository(Context context) {
-        AppDatabase database = AppDatabase.buildDatabase(context);
+    public XgpMelhoramentoDetalhesRepository(AppDatabase database) {
         dao = database.xgpMelhoramentoDetalhesDao();
     }
 

@@ -5,54 +5,71 @@ import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Ignore;
 import androidx.room.Index;
+import androidx.room.TypeConverters;
+
+import com.app.fragments.utils.DateConverter;
 
 import java.util.Date;
 
 @Entity(
         tableName = "XGP_MELHORAMENTO_DET",
-        primaryKeys = {"Id_Melhoramento_Det", "Id_Melhoramento"},
-        foreignKeys = {
-                @ForeignKey(
-                        entity = XgpMelhoramento.class,
-                        parentColumns = {"Id_Melhoramento"},
-                        childColumns = {"Id_Melhoramento"}
-                )
-        },
-        indices = {
-                @Index(value = {"Id_Melhoramento"}),
-                @Index(value = {"Id_Melhoramento_Det"})
-        }
+        primaryKeys = {"Id_Melhoramento", "Id_Melhoramento_Det"},
+        foreignKeys = @ForeignKey(
+                entity = XgpMelhoramento.class,
+                parentColumns = "Id_Melhoramento",
+                childColumns = "Id_Melhoramento",
+                onDelete = ForeignKey.CASCADE,
+                onUpdate = ForeignKey.CASCADE
+        ),
+        indices = {@Index(value = "Id_Melhoramento")}
 )
 public class XgpMelhoramentoDetalhes {
+
     @ColumnInfo(name = "Id_Melhoramento_Det")
     private long idMelhoramentoDet;
+
     @ColumnInfo(name = "Id_Melhoramento")
     private long idMelhoramento;
+
     @ColumnInfo(name = "Descricao")
     private String descricao;
+
     @ColumnInfo(name = "Sigla")
     private String sigla;
+
     @ColumnInfo(name = "Nota_Inicial")
-    private String notaInicial;
+    private Integer notaInicial;
+
     @ColumnInfo(name = "Nota_Final")
-    private String notaFinal;
-    @ColumnInfo(name = "Excesssao")
+    private Integer notaFinal;
+
+    @ColumnInfo(name = "Excessao")
     private String excessao;
+
     @ColumnInfo(name = "Usuario_Created")
+    @TypeConverters(DateConverter.class)
     private Date usuarioCreated;
+
     @ColumnInfo(name = "Data_Created")
+    @TypeConverters(DateConverter.class)
     private Date dataCreated;
+
     @ColumnInfo(name = "Usuario_Changed")
+    @TypeConverters(DateConverter.class)
     private Date usuarioChanged;
+
     @ColumnInfo(name = "Data_Changed")
+    @TypeConverters(DateConverter.class)
     private Date dataChanged;
 
+    // Construtor vazio para o Room
     @Ignore
     public XgpMelhoramentoDetalhes() {
     }
 
+    // Construtor sem idMelhoramentoDet (auto gerado)
     @Ignore
-    public XgpMelhoramentoDetalhes(long idMelhoramento, String descricao, String sigla, String notaInicial, String notaFinal, String excessao, Date usuarioCreated, Date dataCreated, Date usuarioChanged, Date dataChanged) {
+    public XgpMelhoramentoDetalhes(long idMelhoramento, String descricao, String sigla, Integer notaInicial, Integer notaFinal, String excessao, Date usuarioCreated, Date dataCreated, Date usuarioChanged, Date dataChanged) {
         this.idMelhoramento = idMelhoramento;
         this.descricao = descricao;
         this.sigla = sigla;
@@ -65,9 +82,9 @@ public class XgpMelhoramentoDetalhes {
         this.dataChanged = dataChanged;
     }
 
-    public XgpMelhoramentoDetalhes(long idMelhoramentoDet, long idMelhoramento, String descricao, String sigla, String notaInicial, String notaFinal, String excessao, Date usuarioCreated, Date dataCreated, Date usuarioChanged, Date dataChanged) {
-        this.idMelhoramentoDet = idMelhoramentoDet;
+    public XgpMelhoramentoDetalhes(long idMelhoramento, long idMelhoramentoDet, String descricao, String sigla, Integer notaInicial, Integer notaFinal, String excessao, Date usuarioCreated, Date dataCreated, Date usuarioChanged, Date dataChanged) {
         this.idMelhoramento = idMelhoramento;
+        this.idMelhoramentoDet = idMelhoramentoDet;
         this.descricao = descricao;
         this.sigla = sigla;
         this.notaInicial = notaInicial;
@@ -77,14 +94,6 @@ public class XgpMelhoramentoDetalhes {
         this.dataCreated = dataCreated;
         this.usuarioChanged = usuarioChanged;
         this.dataChanged = dataChanged;
-    }
-
-    public long getIdMelhoramentoDet() {
-        return idMelhoramentoDet;
-    }
-
-    public void setIdMelhoramentoDet(long idMelhoramentoDet) {
-        this.idMelhoramentoDet = idMelhoramentoDet;
     }
 
     public long getIdMelhoramento() {
@@ -93,6 +102,14 @@ public class XgpMelhoramentoDetalhes {
 
     public void setIdMelhoramento(long idMelhoramento) {
         this.idMelhoramento = idMelhoramento;
+    }
+
+    public long getIdMelhoramentoDet() {
+        return idMelhoramentoDet;
+    }
+
+    public void setIdMelhoramentoDet(long idMelhoramentoDet) {
+        this.idMelhoramentoDet = idMelhoramentoDet;
     }
 
     public String getDescricao() {
@@ -111,19 +128,19 @@ public class XgpMelhoramentoDetalhes {
         this.sigla = sigla;
     }
 
-    public String getNotaInicial() {
+    public Integer getNotaInicial() {
         return notaInicial;
     }
 
-    public void setNotaInicial(String notaInicial) {
+    public void setNotaInicial(Integer notaInicial) {
         this.notaInicial = notaInicial;
     }
 
-    public String getNotaFinal() {
+    public Integer getNotaFinal() {
         return notaFinal;
     }
 
-    public void setNotaFinal(String notaFinal) {
+    public void setNotaFinal(Integer notaFinal) {
         this.notaFinal = notaFinal;
     }
 
@@ -167,5 +184,3 @@ public class XgpMelhoramentoDetalhes {
         this.dataChanged = dataChanged;
     }
 }
-
-

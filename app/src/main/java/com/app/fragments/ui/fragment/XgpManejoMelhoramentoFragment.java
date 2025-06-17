@@ -10,6 +10,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.app.fragments.R;
+import com.app.fragments.data.entities.XgpManejoMelhoramento;
+import com.app.fragments.data.repository.XgpManejoMelhoramentoRepository;
 import com.app.fragments.ui.adapter.FormsXgpManejoMelhoramentoAdpter;
 import com.app.fragments.ui.components.FormsXgpManejoMelhoramentoComponents;
 
@@ -22,6 +24,8 @@ public class XgpManejoMelhoramentoFragment extends Fragment {
         super(R.layout.fragment_xgp_manejo_melhoramento);
     }
 
+    private XgpManejoMelhoramentoRepository repository;
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -29,13 +33,19 @@ public class XgpManejoMelhoramentoFragment extends Fragment {
         RecyclerView recyclerView = view.findViewById(R.id.recyclerVieXgpManejoMelhoramento);
 
         List<FormsXgpManejoMelhoramentoComponents> formsList = new ArrayList<>();
-        formsList.add(new FormsXgpManejoMelhoramentoComponents("Cadastro 1", "C1", "S1", "EXC1"));
-        formsList.add(new FormsXgpManejoMelhoramentoComponents("Cadastro 2", "C2", "S2", "EXC2"));
-        formsList.add(new FormsXgpManejoMelhoramentoComponents("Cadastro 3", "C3", "S3", "EXC3"));
-        formsList.add(new FormsXgpManejoMelhoramentoComponents("Cadastro 4", "C4", "S4", "EXC4"));
+
+        formsList.add(new FormsXgpManejoMelhoramentoComponents(null, null, "IA", "Nota", "Excssaão", "Observação"));
+        formsList.add(new FormsXgpManejoMelhoramentoComponents(null, null, "IA", "Nota", "Excssaão", "Observação"));
+        formsList.add(new FormsXgpManejoMelhoramentoComponents(null, null, "IA", "Nota", "Excssaão", "Observação"));
+        formsList.add(new FormsXgpManejoMelhoramentoComponents(null, null, "IA", "Nota", "Excssaão", "Observação"));
+        formsList.add(new FormsXgpManejoMelhoramentoComponents(null, null, "IA", "Nota", "Excssaão", "Observação"));
+        formsList.add(new FormsXgpManejoMelhoramentoComponents(null, null, "IA", "Nota", "Excssaão", "Observação"));
+        formsList.add(new FormsXgpManejoMelhoramentoComponents(null, null, "IA", "Nota", "Excssaão", "Observação"));
+        formsList.add(new FormsXgpManejoMelhoramentoComponents(null, null, "IA", "Nota", "Excssaão", "Observação"));
 
         FormsXgpManejoMelhoramentoAdpter adapter = new FormsXgpManejoMelhoramentoAdpter(requireContext(), formsList);
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         recyclerView.setAdapter(adapter);
     }
+
 }

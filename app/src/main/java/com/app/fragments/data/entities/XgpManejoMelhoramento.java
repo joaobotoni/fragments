@@ -4,43 +4,84 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Ignore;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
+import androidx.room.TypeConverters;
+
+import com.app.fragments.utils.DateConverter;
 
 import java.util.Date;
 
-@Entity(tableName = "XGP_MANEJO_MELHORAMENTO",
+@Entity(
+        tableName = "XGP_MANEJO_MELHORAMENTO",
         foreignKeys = {
-                @ForeignKey(entity = XgpMelhoramento.class,
-                        parentColumns = "idMelhoramento",
-                        childColumns = "idMelhoramento"),
-
-                @ForeignKey(entity = XgpMelhoramentoDetalhes.class,
-                        parentColumns = "idMelhoramentoDet",
-                        childColumns = "idMelhoramentoDet")
-        })
+                @ForeignKey(
+                        entity = XgpMelhoramento.class,
+                        parentColumns = "Id_Melhoramento",
+                        childColumns = "Id_Melhoramento",
+                        onDelete = ForeignKey.CASCADE,
+                        onUpdate = ForeignKey.CASCADE
+                ),
+                @ForeignKey(
+                        entity = XgpMelhoramentoDetalhes.class,
+                        parentColumns = {"Id_Melhoramento", "Id_Melhoramento_Det"},
+                        childColumns = {"Id_Melhoramento", "Id_Melhoramento_Det"},
+                        onDelete = ForeignKey.CASCADE,
+                        onUpdate = ForeignKey.CASCADE
+                )
+        },
+        indices = {
+                @Index(value = "Id_Melhoramento"),
+                @Index(value = {"Id_Melhoramento", "Id_Melhoramento_Det"})
+        }
+)
 public class XgpManejoMelhoramento {
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "Id_Manejo_Melhoramento")
     private long idManejoMelhoramento;
+
     @ColumnInfo(name = "Id_Melhoramento")
     private long idMelhoramento;
+
     @ColumnInfo(name = "Id_Melhoramento_Det")
     private long idMelhoramentoDet;
+
+    @ColumnInfo(name = "Nota")
     private String nota;
+
+    @ColumnInfo(name = "Excessao")
     private String excessao;
+
+    @ColumnInfo(name = "Observacao")
     private String observacao;
+
     @ColumnInfo(name = "Usuario_Created")
+    @TypeConverters(DateConverter.class)
     private Date usuarioCreated;
+
     @ColumnInfo(name = "Data_Created")
+    @TypeConverters(DateConverter.class)
     private Date dataCreated;
+
     @ColumnInfo(name = "Usuario_Changed")
+    @TypeConverters(DateConverter.class)
     private Date usuarioChanged;
+
     @ColumnInfo(name = "Data_Changed")
+    @TypeConverters(DateConverter.class)
     private Date dataChanged;
 
     @Ignore
     public XgpManejoMelhoramento() {
     }
-
+    @Ignore
+    public XgpManejoMelhoramento( long idMelhoramento, long idMelhoramentoDet, String nota, String excessao, String observacao) {
+        this.idMelhoramento = idMelhoramento;
+        this.idMelhoramentoDet = idMelhoramentoDet;
+        this.nota = nota;
+        this.excessao = excessao;
+        this.observacao = observacao;
+    }
     @Ignore
     public XgpManejoMelhoramento(long idMelhoramento, long idMelhoramentoDet, String nota, String excessao, String observacao, Date usuarioCreated, Date dataCreated, Date usuarioChanged, Date dataChanged) {
         this.idMelhoramento = idMelhoramento;
@@ -66,6 +107,7 @@ public class XgpManejoMelhoramento {
         this.usuarioChanged = usuarioChanged;
         this.dataChanged = dataChanged;
     }
+
 
     public long getIdManejoMelhoramento() {
         return idManejoMelhoramento;
@@ -147,5 +189,3 @@ public class XgpManejoMelhoramento {
         this.dataChanged = dataChanged;
     }
 }
-
-

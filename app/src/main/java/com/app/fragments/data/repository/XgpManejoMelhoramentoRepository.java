@@ -1,16 +1,15 @@
 package com.app.fragments.data.repository;
 
-import android.content.Context;
-
 import com.app.fragments.data.dao.XgpManejoMelhoramentoDao;
 import com.app.fragments.data.db.AppDatabase;
 import com.app.fragments.data.entities.XgpManejoMelhoramento;
 
+
+
+
 public class XgpManejoMelhoramentoRepository {
     private XgpManejoMelhoramentoDao dao;
-
-    public XgpManejoMelhoramentoRepository(Context context) {
-        AppDatabase database = AppDatabase.buildDatabase(context);
+    public XgpManejoMelhoramentoRepository(AppDatabase database) {
         dao = database.xgpManejoMelhoramentoDao();
     }
 

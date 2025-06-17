@@ -1,12 +1,17 @@
 package com.app.fragments.ui.components;
 
 public class FormsXgpManejoMelhoramentoComponents {
+    private Long idMelhoramento;
+    private Long idMelhoramentoDet;
     private String nomeMelhoramento;
     private String nota;
     private String excessao;
     private String observacao;
 
-    public FormsXgpManejoMelhoramentoComponents(String nomeMelhoramento, String nota, String excessao, String observacao) {
+
+    public FormsXgpManejoMelhoramentoComponents(Long idMelhoramento, Long idMelhoramentoDet, String nomeMelhoramento, String nota, String excessao, String observacao) {
+        this.idMelhoramento = idMelhoramento;
+        this.idMelhoramentoDet = idMelhoramentoDet;
         this.nomeMelhoramento = nomeMelhoramento;
         this.nota = nota;
         this.excessao = excessao;
