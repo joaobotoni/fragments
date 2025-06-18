@@ -17,11 +17,11 @@ import java.util.List;
 public class XgpConsultaQtdPesoAdapter extends RecyclerView.Adapter<XgpConsultaQtdPesoAdapter.ViewHolderConsulta> {
 
     private final Context context;
-    private final List<XgpConsultaQtdPesoComponent> xgpConsultaQtdPesoComponentList;
+    private final List<XgpConsultaQtdPesoComponent> list;
 
     public XgpConsultaQtdPesoAdapter(Context context, List<XgpConsultaQtdPesoComponent> list) {
         this.context = context;
-        this.xgpConsultaQtdPesoComponentList = list;
+        this.list = list;
     }
 
     @NonNull
@@ -33,13 +33,13 @@ public class XgpConsultaQtdPesoAdapter extends RecyclerView.Adapter<XgpConsultaQ
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolderConsulta holder, int position) {
-        XgpConsultaQtdPesoComponent component = xgpConsultaQtdPesoComponentList.get(position);
+        XgpConsultaQtdPesoComponent component = list.get(position);
         holder.bind(component);
     }
 
     @Override
     public int getItemCount() {
-        return xgpConsultaQtdPesoComponentList != null ? xgpConsultaQtdPesoComponentList.size() : 0;
+        return list != null ? list.size() : 0;
     }
 
     public static class ViewHolderConsulta extends RecyclerView.ViewHolder {
@@ -62,12 +62,24 @@ public class XgpConsultaQtdPesoAdapter extends RecyclerView.Adapter<XgpConsultaQ
         }
 
         public void bind(XgpConsultaQtdPesoComponent component) {
-            nomeTouroPaiView.setText("Touro: " + component.getNomeTouroPai());
-            machoQuantidadeView.setText("Qnt: " + component.getMachoQuantidade());
-            machoPesoView.setText("Peso: " + component.getMachoPeso() + "kg");
-            femeaQuantidadeView.setText("Qnt: " + component.getFemeaQuantidade());
-            femeaPesoView.setText("Peso: " + component.getFemeaPeso() + "kg");
-            pesoTotalView.setText("Peso: " + component.getTotal() + "kg");
+            if (nomeTouroPaiView != null) {
+                nomeTouroPaiView.setText("Touro: " + component.getNomeTouroPai());
+            }
+            if (machoQuantidadeView != null) {
+                machoQuantidadeView.setText("Qnt: " + component.getMachoQuantidade());
+            }
+            if (machoPesoView != null) {
+                machoPesoView.setText("Peso: " + component.getMachoPeso() + "kg");
+            }
+            if (femeaQuantidadeView != null) {
+                femeaQuantidadeView.setText("Qnt: " + component.getFemeaQuantidade());
+            }
+            if (femeaPesoView != null) {
+                femeaPesoView.setText("Peso: " + component.getFemeaPeso() + "kg");
+            }
+            if (pesoTotalView != null) {
+                pesoTotalView.setText("Peso: " + component.getTotal() + "kg");
+            }
         }
     }
 }

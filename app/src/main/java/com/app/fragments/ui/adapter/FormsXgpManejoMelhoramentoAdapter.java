@@ -16,12 +16,12 @@ import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.List;
 
+public class FormsXgpManejoMelhoramentoAdapter extends RecyclerView.Adapter<FormsXgpManejoMelhoramentoAdapter.FormViewHolder> {
 
-public class FormsXgpManejoMelhoramentoAdpter extends RecyclerView.Adapter<FormsXgpManejoMelhoramentoAdpter.FormViewHolder> {
+    private final Context context;
+    private final List<FormsXgpManejoMelhoramentoComponent> list;
 
-    Context context;
-    List<FormsXgpManejoMelhoramentoComponent> list;
-    public FormsXgpManejoMelhoramentoAdpter(Context context, List<FormsXgpManejoMelhoramentoComponent> list) {
+    public FormsXgpManejoMelhoramentoAdapter(Context context, List<FormsXgpManejoMelhoramentoComponent> list) {
         this.context = context;
         this.list = list;
     }
@@ -35,7 +35,7 @@ public class FormsXgpManejoMelhoramentoAdpter extends RecyclerView.Adapter<Forms
 
     @Override
     public void onBindViewHolder(@NonNull FormViewHolder holder, int position) {
-        var form = list.get(position);
+        FormsXgpManejoMelhoramentoComponent form = list.get(position);
         holder.bind(form);
     }
 
@@ -44,20 +44,23 @@ public class FormsXgpManejoMelhoramentoAdpter extends RecyclerView.Adapter<Forms
         return list.size();
     }
 
-    public class FormViewHolder extends RecyclerView.ViewHolder {
+    public static class FormViewHolder extends RecyclerView.ViewHolder {
+        private final TextView titleView;
+        private final EditText notaView;
+
         public FormViewHolder(@NonNull View itemView) {
             super(itemView);
-        }
-
-        protected void bind(FormsXgpManejoMelhoramentoComponent forms) {
-            TextView titleView = itemView.findViewById(R.id.nome_melhoramento);
-            titleView.setText(forms.getNomeMelhoramento());
-            String nomeMelhoramento = titleView.getText().toString().trim();
-
+            titleView = itemView.findViewById(R.id.nome_melhoramento);
             TextInputLayout notaInput = itemView.findViewById(R.id.notaContainer);
-            EditText nota = notaInput.getEditText();
-            if (nota != null) {
-                nota.setHint(forms.getNota());
+            notaView = notaInput != null ? notaInput.getEditText() : null;
+        }
+        public void bind(FormsXgpManejoMelhoramentoComponent form) {
+            if (titleView != null) {
+                titleView.setText(form.getNomeMelhoramento());
+            }
+
+            if (notaView != null) {
+                notaView.setHint(form.getNota());
             }
         }
     }

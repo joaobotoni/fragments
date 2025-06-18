@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.app.fragments.R;
 import com.app.fragments.data.repository.XgpManejoMelhoramentoRepository;
-import com.app.fragments.ui.adapter.FormsXgpManejoMelhoramentoAdpter;
+import com.app.fragments.ui.adapter.FormsXgpManejoMelhoramentoAdapter;
 import com.app.fragments.ui.components.FormsXgpManejoMelhoramentoComponent;
 
 import java.util.ArrayList;
@@ -35,7 +35,7 @@ public class XgpManejoMelhoramentoFragment extends Fragment {
 
         formsList.add(new FormsXgpManejoMelhoramentoComponent(null, null, null, null));
 
-        FormsXgpManejoMelhoramentoAdpter adapter = new FormsXgpManejoMelhoramentoAdpter(requireContext(), formsList);
+        FormsXgpManejoMelhoramentoAdapter adapter = new FormsXgpManejoMelhoramentoAdapter(requireContext(), formsList);
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         recyclerView.setAdapter(adapter);
     }
