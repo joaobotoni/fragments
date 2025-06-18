@@ -11,7 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.app.fragments.R;
-import com.app.fragments.ui.components.FormsXgpManejoMelhoramentoComponents;
+import com.app.fragments.ui.components.FormsXgpManejoMelhoramentoComponent;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.List;
@@ -20,8 +20,8 @@ import java.util.List;
 public class FormsXgpManejoMelhoramentoAdpter extends RecyclerView.Adapter<FormsXgpManejoMelhoramentoAdpter.FormViewHolder> {
 
     Context context;
-    List<FormsXgpManejoMelhoramentoComponents> list;
-    public FormsXgpManejoMelhoramentoAdpter(Context context, List<FormsXgpManejoMelhoramentoComponents> list) {
+    List<FormsXgpManejoMelhoramentoComponent> list;
+    public FormsXgpManejoMelhoramentoAdpter(Context context, List<FormsXgpManejoMelhoramentoComponent> list) {
         this.context = context;
         this.list = list;
     }
@@ -49,7 +49,7 @@ public class FormsXgpManejoMelhoramentoAdpter extends RecyclerView.Adapter<Forms
             super(itemView);
         }
 
-        protected void bind(FormsXgpManejoMelhoramentoComponents forms) {
+        protected void bind(FormsXgpManejoMelhoramentoComponent forms) {
             TextView titleView = itemView.findViewById(R.id.nome_melhoramento);
             titleView.setText(forms.getNomeMelhoramento());
             String nomeMelhoramento = titleView.getText().toString().trim();
@@ -58,18 +58,6 @@ public class FormsXgpManejoMelhoramentoAdpter extends RecyclerView.Adapter<Forms
             EditText nota = notaInput.getEditText();
             if (nota != null) {
                 nota.setHint(forms.getNota());
-            }
-
-            TextInputLayout excessaoInput = itemView.findViewById(R.id.excessaoContainer);
-            EditText excessao = excessaoInput.getEditText();
-            if (excessao != null) {
-                excessao.setHint(forms.getExcessao());
-            }
-
-            TextInputLayout observacaoInput = itemView.findViewById(R.id.observacaoContainer);
-            EditText observacao = observacaoInput.getEditText();
-            if (observacao != null) {
-                observacao.setHint(forms.getObservacao());
             }
         }
     }

@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="16dp"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="4dp"
+    app:cardBackgroundColor="#F5F5F5">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="20dp">
+
+        <!-- Nome do Touro -->
+        <TextView
+            android:id="@+id/nomeTouroPai"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Touro: Zebu"
+            android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <!-- Linha Macho -->
+        <TextView
+            android:id="@+id/label_macho"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Macho:"
+            android:layout_marginTop="16dp"
+            android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+            app:layout_constraintTop_toBottomOf="@id/nomeTouroPai"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/machoQuantidade"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Qnt: 12"
+            android:textAppearance="@style/TextAppearance.Material3.BodySmall"
+            app:layout_constraintTop_toTopOf="@id/label_macho"
+            app:layout_constraintStart_toEndOf="@id/label_macho"
+            android:layout_marginStart="12dp" />
+
+        <TextView
+            android:id="@+id/machoPeso"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Peso: 480kg"
+            android:textAppearance="@style/TextAppearance.Material3.BodySmall"
+            app:layout_constraintTop_toTopOf="@id/label_macho"
+            app:layout_constraintStart_toEndOf="@id/machoQuantidade"
+            android:layout_marginStart="12dp" />
+
+        <!-- Linha Fêmea -->
+        <TextView
+            android:id="@+id/label_femea"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Fêmea:"
+            android:layout_marginTop="16dp"
+            android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+            app:layout_constraintTop_toBottomOf="@id/label_macho"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/femeaQuantidade"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Qnt: 9"
+            android:textAppearance="@style/TextAppearance.Material3.BodySmall"
+            app:layout_constraintTop_toTopOf="@id/label_femea"
+            app:layout_constraintStart_toEndOf="@id/label_femea"
+            android:layout_marginStart="12dp" />
+
+        <TextView
+            android:id="@+id/femeaPeso"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Peso: 420kg"
+            android:textAppearance="@style/TextAppearance.Material3.BodySmall"
+            app:layout_constraintTop_toTopOf="@id/label_femea"
+            app:layout_constraintStart_toEndOf="@id/femeaQuantidade"
+            android:layout_marginStart="12dp" />
+
+        <!-- Totais -->
+        <TextView
+            android:id="@+id/total"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Total:"
+            android:layout_marginTop="16dp"
+            android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+            app:layout_constraintTop_toBottomOf="@id/label_femea"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/pesoTotal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Peso: 900kg"
+            android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+            app:layout_constraintTop_toTopOf="@id/total"
+            app:layout_constraintStart_toEndOf="@id/total"
+            android:layout_marginStart="16dp" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>

@@ -10,10 +10,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.app.fragments.R;
-import com.app.fragments.data.entities.XgpManejoMelhoramento;
 import com.app.fragments.data.repository.XgpManejoMelhoramentoRepository;
 import com.app.fragments.ui.adapter.FormsXgpManejoMelhoramentoAdpter;
-import com.app.fragments.ui.components.FormsXgpManejoMelhoramentoComponents;
+import com.app.fragments.ui.components.FormsXgpManejoMelhoramentoComponent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,16 +31,9 @@ public class XgpManejoMelhoramentoFragment extends Fragment {
 
         RecyclerView recyclerView = view.findViewById(R.id.recyclerVieXgpManejoMelhoramento);
 
-        List<FormsXgpManejoMelhoramentoComponents> formsList = new ArrayList<>();
+        List<FormsXgpManejoMelhoramentoComponent> formsList = new ArrayList<>();
 
-        formsList.add(new FormsXgpManejoMelhoramentoComponents(null, null, "IA", "Nota", "Excssaão", "Observação"));
-        formsList.add(new FormsXgpManejoMelhoramentoComponents(null, null, "IA", "Nota", "Excssaão", "Observação"));
-        formsList.add(new FormsXgpManejoMelhoramentoComponents(null, null, "IA", "Nota", "Excssaão", "Observação"));
-        formsList.add(new FormsXgpManejoMelhoramentoComponents(null, null, "IA", "Nota", "Excssaão", "Observação"));
-        formsList.add(new FormsXgpManejoMelhoramentoComponents(null, null, "IA", "Nota", "Excssaão", "Observação"));
-        formsList.add(new FormsXgpManejoMelhoramentoComponents(null, null, "IA", "Nota", "Excssaão", "Observação"));
-        formsList.add(new FormsXgpManejoMelhoramentoComponents(null, null, "IA", "Nota", "Excssaão", "Observação"));
-        formsList.add(new FormsXgpManejoMelhoramentoComponents(null, null, "IA", "Nota", "Excssaão", "Observação"));
+        formsList.add(new FormsXgpManejoMelhoramentoComponent(null, null, null, null));
 
         FormsXgpManejoMelhoramentoAdpter adapter = new FormsXgpManejoMelhoramentoAdpter(requireContext(), formsList);
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
