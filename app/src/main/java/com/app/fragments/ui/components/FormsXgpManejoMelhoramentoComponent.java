@@ -6,8 +6,6 @@ public class FormsXgpManejoMelhoramentoComponent {
     private String nomeMelhoramento;
     private String nota;
 
-
-
     public FormsXgpManejoMelhoramentoComponent(Long idMelhoramento, Long idMelhoramentoDet, String nomeMelhoramento, String nota) {
         this.idMelhoramento = idMelhoramento;
         this.idMelhoramentoDet = idMelhoramentoDet;

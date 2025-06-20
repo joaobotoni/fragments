@@ -66,19 +66,19 @@ public class XgpConsultaQtdPesoAdapter extends RecyclerView.Adapter<XgpConsultaQ
                 nomeTouroPaiView.setText("Touro: " + component.getNomeTouroPai());
             }
             if (machoQuantidadeView != null) {
-                machoQuantidadeView.setText("Qnt: " + component.getMachoQuantidade());
+                machoQuantidadeView.setText(String.valueOf(component.getMachoQuantidade()));
             }
             if (machoPesoView != null) {
-                machoPesoView.setText("Peso: " + component.getMachoPeso() + "kg");
+                machoPesoView.setText(component.getMachoPeso() + "kg");
             }
             if (femeaQuantidadeView != null) {
-                femeaQuantidadeView.setText("Qnt: " + component.getFemeaQuantidade());
+                femeaQuantidadeView.setText(String.valueOf(component.getFemeaQuantidade()));
             }
             if (femeaPesoView != null) {
-                femeaPesoView.setText("Peso: " + component.getFemeaPeso() + "kg");
+                femeaPesoView.setText(component.getFemeaPeso() + "kg");
             }
             if (pesoTotalView != null) {
-                pesoTotalView.setText("Peso: " + component.getTotal() + "kg");
+                pesoTotalView.setText("Peso Total: " + component.getTotal() + "kg");
             }
         }
     }
