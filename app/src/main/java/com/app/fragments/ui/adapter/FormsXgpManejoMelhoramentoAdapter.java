@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -35,32 +36,40 @@ public class FormsXgpManejoMelhoramentoAdapter extends RecyclerView.Adapter<Form
 
     @Override
     public void onBindViewHolder(@NonNull FormViewHolder holder, int position) {
-        FormsXgpManejoMelhoramentoComponent form = list.get(position);
-        holder.bind(form);
+        holder.bind(list.get(position));
     }
 
     @Override
     public int getItemCount() {
         return list.size();
     }
-
-    public static class FormViewHolder extends RecyclerView.ViewHolder {
-        private final TextView titleView;
-        private final EditText notaView;
-
+    static class FormViewHolder extends RecyclerView.ViewHolder {
+        private final TextView nome, sigla;
+        private final EditText nota;
         public FormViewHolder(@NonNull View itemView) {
             super(itemView);
-            titleView = itemView.findViewById(R.id.nome_melhoramento);
-            TextInputLayout notaInput = itemView.findViewById(R.id.notaContainer);
-            notaView = notaInput != null ? notaInput.getEditText() : null;
+            nome = itemView.findViewById(R.id.nome_melhoramento);
+            sigla = itemView.findViewById(R.id.sigla_melhoramento);
+            nota = ((TextInputLayout) itemView.findViewById(R.id.notaContainer)).getEditText();
         }
-        public void bind(FormsXgpManejoMelhoramentoComponent form) {
-            if (titleView != null) {
-                titleView.setText(form.getNomeMelhoramento());
-            }
 
-            if (notaView != null) {
-                notaView.setHint(form.getNota());
+        void bind(FormsXgpManejoMelhoramentoComponent item) {
+            if (nome != null) {
+                nome.setText(item.getNomeMelhoramento());
+            }
+            else {
+                Toast.makeText(itemView.getContext(), "Erro: TextView 'nome_melhoramento'", Toast.LENGTH_SHORT).show();
+            }
+            if (sigla != null) {
+                sigla.setText(item.getSigla());
+            }
+            else {
+                Toast.makeText(itemView.getContext(), "Erro: TextView 'sigla_melhoramento'", Toast.LENGTH_SHORT).show();
+            }
+            if (nota != null) {
+                nota.setHint("Digite a nota");
+            } else {
+                Toast.makeText(itemView.getContext(), "Erro: EditText para 'nota'", Toast.LENGTH_SHORT).show();
             }
         }
     }

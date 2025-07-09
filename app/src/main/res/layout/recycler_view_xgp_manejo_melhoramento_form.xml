@@ -1,56 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_margin="16dp"
-    app:cardBackgroundColor="#e0e0e0"
-    app:cardCornerRadius="10dp"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent">
+                                                   xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                   xmlns:tools="http://schemas.android.com/tools"
+                                                   android:id="@+id/main"
+                                                   android:layout_width="match_parent"
+                                                   android:layout_height="wrap_content"
+                                                   android:layout_margin="16dp"
+                                                   app:cardBackgroundColor="#e0e0e0"
+                                                   app:cardCornerRadius="10dp"
+                                                   app:layout_constraintEnd_toEndOf="parent"
+                                                   app:layout_constraintStart_toStartOf="parent"
+                                                   app:layout_constraintTop_toTopOf="parent">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="16dp">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp">
 
         <TextView
-            android:id="@+id/nome_melhoramento"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:importantForAccessibility="yes"
-            tools:text="Nome do Melhoramento - 'Sigla'"
-            android:textColor="#000000"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="HardcodedText" />
+                android:id="@+id/nome_melhoramento"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:importantForAccessibility="yes"
+                tools:text="Nome do Melhoramento"
+                android:textColor="#000000"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="HardcodedText" />
+
+        <TextView
+                android:id="@+id/separador"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:importantForAccessibility="no"
+                android:text=" - "
+                android:textColor="#000000"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toEndOf="@id/nome_melhoramento"
+                app:layout_constraintBaseline_toBaselineOf="@id/nome_melhoramento"
+                tools:ignore="HardcodedText" />
+
+        <TextView
+                android:id="@+id/sigla_melhoramento"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:importantForAccessibility="yes"
+                tools:text="Sigla"
+                android:textColor="#000000"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toEndOf="@id/separador"
+                app:layout_constraintBaseline_toBaselineOf="@id/separador"
+                tools:ignore="HardcodedText" />
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/notaContainer"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            app:boxBackgroundColor="#cccccc"
-            app:boxBackgroundMode="filled"
-            app:boxStrokeColor="#6200EE"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/nome_melhoramento"
-            tools:ignore="HardcodedText">
+                android:id="@+id/notaContainer"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                app:boxBackgroundColor="#cccccc"
+                app:boxBackgroundMode="filled"
+                app:boxStrokeColor="#6200EE"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/nome_melhoramento"
+                tools:ignore="HardcodedText">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/nota"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                tools:hint="Digite a nota"
-                android:importantForAccessibility="yes"
-                android:inputType="text" />
+                    android:id="@+id/nota"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:hint="Digite a nota"
+                    android:importantForAccessibility="yes"
+                    android:inputType="text" />
         </com.google.android.material.textfield.TextInputLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

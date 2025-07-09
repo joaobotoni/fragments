@@ -60,7 +60,6 @@ public class XgpConsultaQtdPesoAdapter extends RecyclerView.Adapter<XgpConsultaQ
             femeaPesoView = itemView.findViewById(R.id.femeaPeso);
             pesoTotalView = itemView.findViewById(R.id.pesoTotal);
         }
-
         public void bind(XgpConsultaQtdPesoComponent component) {
             if (nomeTouroPaiView != null) {
                 nomeTouroPaiView.setText("Touro: " + component.getNomeTouroPai());

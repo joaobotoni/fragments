@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.app.fragments.R;
 import com.app.fragments.data.db.AppDatabase;
-import com.app.fragments.ui.fragment.XgpConsultaQtdPesoFragment;
 import com.app.fragments.ui.fragment.XgpManejoMelhoramentoFragment;
 
 public class MainActivity extends AppCompatActivity {
@@ -21,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
             AppDatabase database = AppDatabase.buildDatabase(getApplicationContext());
             getSupportFragmentManager().beginTransaction()
                     .setReorderingAllowed(true)
-                    .add(R.id.fragment_container, XgpConsultaQtdPesoFragment.class, null).commit();
+                    .add(R.id.fragment_container, XgpManejoMelhoramentoFragment.class, null).commit();
         }
     }
 }

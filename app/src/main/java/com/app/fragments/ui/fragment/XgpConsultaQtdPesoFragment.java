@@ -29,9 +29,10 @@ public class XgpConsultaQtdPesoFragment extends Fragment {
         RecyclerView recyclerView = view.findViewById(R.id.recycler_viexgp_consulta_qtd_peso_menejo);
 
         List<XgpConsultaQtdPesoComponent> lista = new ArrayList<>();
-        lista.add(new XgpConsultaQtdPesoComponent("teste", 12, 480.0, 9, 420.0, 900.0));
-        lista.add(new XgpConsultaQtdPesoComponent("goku", 7, 500.0, 11, 430.0, 930.0));
-        lista.add(new XgpConsultaQtdPesoComponent("Nelore", 10, 470.0, 8, 415.0, 885.0));
+        lista.add(new XgpConsultaQtdPesoComponent("teste1", 12, 480.0, 9, 420.0, 900.0));
+        lista.add(new XgpConsultaQtdPesoComponent("Test2", 7, 500.0, 11, 430.0, 930.0));
+        lista.add(new XgpConsultaQtdPesoComponent("Teste3", 10, 470.0, 8, 415.0, 885.0));
+        lista.add(new XgpConsultaQtdPesoComponent("Teste3", 10, 470.0, 8, 415.0, 885.0));
 
         XgpConsultaQtdPesoAdapter adapter = new XgpConsultaQtdPesoAdapter(requireContext(), lista);
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
