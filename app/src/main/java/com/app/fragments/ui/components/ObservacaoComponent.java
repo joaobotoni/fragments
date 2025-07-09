@@ -6,7 +6,6 @@ public class ObservacaoComponent  {
     public ObservacaoComponent(String observacao) {
         this.observacao = observacao;
     }
-
     public String getObservacao() {
         return observacao;
     }
@@ -17,8 +16,6 @@ public class ObservacaoComponent  {
 
     @Override
     public String toString() {
-        return "ObservacaoComponent{" +
-                "observacao='" + observacao + '\'' +
-                '}';
+        return observacao;
     }
 }

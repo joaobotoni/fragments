@@ -17,15 +17,18 @@ public class ObservacaoAdapter extends ArrayAdapter<ObservacaoComponent> {
     public ObservacaoAdapter(@NonNull Context context, List<ObservacaoComponent> componentList) {
         super(context, 0, componentList);
     }
+
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         return initView(position, convertView, parent);
     }
+
     @Override
     public View getDropDownView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         return initView(position, convertView, parent);
     }
+
     private View initView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.observacao_item, parent, false);
@@ -33,7 +36,7 @@ public class ObservacaoAdapter extends ArrayAdapter<ObservacaoComponent> {
         TextView observacaoItem = convertView.findViewById(R.id.observacao);
         ObservacaoComponent item = getItem(position);
         if (item != null) {
-            observacaoItem.setText(item.getObservacao());
+            observacaoItem.setText(item.getObservacao().toUpperCase());
         }
         return convertView;
     }
