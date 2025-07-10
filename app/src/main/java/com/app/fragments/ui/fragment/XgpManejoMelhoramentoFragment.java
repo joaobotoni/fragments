@@ -46,12 +46,14 @@ public class XgpManejoMelhoramentoFragment extends Fragment {
         loadAllData();
     }
 
+   // Inicializa todos os elementos da interface
     private void setupViews(View view) {
         recyclerView = view.findViewById(R.id.recyclerVieXgpManejoMelhoramento);
         observacaoAutoCompleteTextView = view.findViewById(R.id.spinner_manejo_melhoramento);
         mainHandler = new Handler(Looper.getMainLooper());
     }
 
+    // Carrega dados dos formulários e observações de forma assíncrona e aplica os adapters
     private void loadAllData() {
         CompletableFuture<List<FormsXgpManejoMelhoramentoComponent>> formsFuture = loadFormsAsync();
         CompletableFuture<List<ObservacaoComponent>> observacoesFuture = loadObservacoesAsync();
@@ -71,6 +73,7 @@ public class XgpManejoMelhoramentoFragment extends Fragment {
                 });
     }
 
+    // Busca os formulários de forma assíncrona usando CompletableFuture
     private CompletableFuture<List<FormsXgpManejoMelhoramentoComponent>> loadFormsAsync() {
         return CompletableFuture.supplyAsync(() -> {
             try {
@@ -104,6 +107,7 @@ public class XgpManejoMelhoramentoFragment extends Fragment {
         });
     }
 
+   // Busca observações de forma assíncrona usando CompletableFuture
     private CompletableFuture<List<ObservacaoComponent>> loadObservacoesAsync() {
         return CompletableFuture.supplyAsync(() -> {
             try {
@@ -117,12 +121,14 @@ public class XgpManejoMelhoramentoFragment extends Fragment {
         });
     }
 
+    // Aplica e configura o adapter dos formulários no RecyclerView
     private void setupRecyclerView(List<FormsXgpManejoMelhoramentoComponent> forms) {
         FormsXgpManejoMelhoramentoAdapter adapter = new FormsXgpManejoMelhoramentoAdapter(requireContext(), forms);
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         recyclerView.setAdapter(adapter);
     }
 
+    // Aplica e configura o adapter das observações no AutoCompleteTextView
     private void setupObservacaoSpinner(List<ObservacaoComponent> observacoes) {
         ObservacaoAdapter adapter = new ObservacaoAdapter(requireContext(), observacoes);
         observacaoAutoCompleteTextView.setAdapter(adapter);

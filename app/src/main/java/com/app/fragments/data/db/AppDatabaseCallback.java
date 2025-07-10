@@ -30,5 +30,4 @@ public class AppDatabaseCallback extends RoomDatabase.Callback {
             db.execSQL("INSERT INTO xgp_observacao (id_observacao, id_melhoramento, sigla, descricao) VALUES (4, 4, 'DU', 'Defeito no Umbigo')");
         });
     }
-
 }
