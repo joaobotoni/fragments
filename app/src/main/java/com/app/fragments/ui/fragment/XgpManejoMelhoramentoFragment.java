@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,6 +21,7 @@ import com.app.fragments.ui.adapter.FormsXgpManejoMelhoramentoAdapter;
 import com.app.fragments.ui.adapter.ObservacaoAdapter;
 import com.app.fragments.ui.components.FormsXgpManejoMelhoramentoComponent;
 import com.app.fragments.ui.components.ObservacaoComponent;
+import com.google.android.material.button.MaterialButton;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -31,6 +33,7 @@ public class XgpManejoMelhoramentoFragment extends Fragment {
     private Handler mainHandler;
     private RecyclerView recyclerView;
     private AutoCompleteTextView observacaoAutoCompleteTextView;
+    private MaterialButton saved;
     private String nota;
     private String observacaoSelecionada;
 
@@ -50,6 +53,7 @@ public class XgpManejoMelhoramentoFragment extends Fragment {
     private void setupViews(View view) {
         recyclerView = view.findViewById(R.id.recyclerVieXgpManejoMelhoramento);
         observacaoAutoCompleteTextView = view.findViewById(R.id.spinner_manejo_melhoramento);
+        saved = view.findViewById(R.id.send);
         mainHandler = new Handler(Looper.getMainLooper());
     }
 
@@ -86,7 +90,7 @@ public class XgpManejoMelhoramentoFragment extends Fragment {
                                     return new FormsXgpManejoMelhoramentoComponent(
                                             melhoramento.getNome(),
                                             caracteristica.getSigla(),
-                                            "Digite a nota"
+                                            getCharacteristicExceptionByNoteRange(caracteristica.getNotaInicial(), caracteristica.getNotaFinal(), caracteristica.getExcessao())
                                     );
                                 }
                             } catch (Exception e) {
@@ -136,6 +140,25 @@ public class XgpManejoMelhoramentoFragment extends Fragment {
             ObservacaoComponent selected = (ObservacaoComponent) parent.getItemAtPosition(position);
             observacaoSelecionada = selected.getObservacao();
         });
+    }
+
+    private String getCharacteristicExceptionByNoteRange(Integer initialNote, Integer finalNote, String exception) {
+        if (initialNote == null || finalNote == null) {
+            Toast.makeText(getContext(), "Nota inicial ou final está nula", Toast.LENGTH_SHORT).show();
+            throw new IllegalArgumentException("Nota inicial ou final não pode ser nula");
+        }
+
+        if (exception == null || exception.trim().isEmpty()) {
+            Toast.makeText(getContext(), "A exceção não pode ser nula ou vazia", Toast.LENGTH_SHORT).show();
+            throw new IllegalArgumentException("A exceção não pode ser nula ou vazia");
+        }
+
+        if (initialNote < 1 || finalNote > 6 || initialNote >= finalNote) {
+            Toast.makeText(getContext(), "Intervalo de nota inválido. Esperado: 1 a 6", Toast.LENGTH_SHORT).show();
+            throw new IllegalArgumentException("Intervalo de nota inválido");
+        }
+
+        return exception;
     }
 
     private void showErrorMessage(String message) {

@@ -1,6 +1,8 @@
 package com.app.fragments.ui.adapter;
 
 import android.content.Context;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,9 +45,11 @@ public class FormsXgpManejoMelhoramentoAdapter extends RecyclerView.Adapter<Form
     public int getItemCount() {
         return list.size();
     }
+
     static class FormViewHolder extends RecyclerView.ViewHolder {
         private final TextView nome, sigla;
         private final EditText nota;
+
         public FormViewHolder(@NonNull View itemView) {
             super(itemView);
             nome = itemView.findViewById(R.id.nome_melhoramento);
@@ -56,18 +60,40 @@ public class FormsXgpManejoMelhoramentoAdapter extends RecyclerView.Adapter<Form
         void bind(FormsXgpManejoMelhoramentoComponent item) {
             if (nome != null) {
                 nome.setText(item.getNomeMelhoramento());
-            }
-            else {
+            } else {
                 Toast.makeText(itemView.getContext(), "Erro: TextView 'nome_melhoramento'", Toast.LENGTH_SHORT).show();
             }
             if (sigla != null) {
                 sigla.setText(item.getSigla());
-            }
-            else {
+            } else {
                 Toast.makeText(itemView.getContext(), "Erro: TextView 'sigla_melhoramento'", Toast.LENGTH_SHORT).show();
             }
             if (nota != null) {
                 nota.setHint("Digite a nota");
+                nota.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable editable) {
+                        try {
+                            int valor = Integer.parseInt(editable.toString());
+                            if (valor > 0 && valor <= 6) {
+                                item.setNota(editable.toString());
+                            }else {
+                                item.setNota(null);
+                            }
+                        } catch (NumberFormatException e) {
+                            item.setNota(null);
+                        }
+                    }
+                });
+
             } else {
                 Toast.makeText(itemView.getContext(), "Erro: EditText para 'nota'", Toast.LENGTH_SHORT).show();
             }
