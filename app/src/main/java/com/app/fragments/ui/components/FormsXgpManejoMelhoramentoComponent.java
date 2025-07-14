@@ -1,21 +1,23 @@
 package com.app.fragments.ui.components;
 
 public class FormsXgpManejoMelhoramentoComponent {
-    private String nomeMelhoramento;
+    private String caracteristica;
     private String sigla;
     private String nota;
-    public FormsXgpManejoMelhoramentoComponent(String nomeMelhoramento, String sigla, String nota) {
-        this.nomeMelhoramento = nomeMelhoramento;
+
+
+    public FormsXgpManejoMelhoramentoComponent(String caracteristica, String sigla, String nota) {
+        this.caracteristica = caracteristica;
         this.sigla = sigla;
         this.nota = nota;
     }
 
-    public String getNomeMelhoramento() {
-        return nomeMelhoramento;
+    public String getCaracteristica() {
+        return caracteristica;
     }
 
-    public void setNomeMelhoramento(String nomeMelhoramento) {
-        this.nomeMelhoramento = nomeMelhoramento;
+    public void setCaracteristica(String caracteristica) {
+        this.caracteristica = caracteristica;
     }
 
     public String getSigla() {

@@ -49,17 +49,16 @@ public class FormsXgpManejoMelhoramentoAdapter extends RecyclerView.Adapter<Form
     static class FormViewHolder extends RecyclerView.ViewHolder {
         private final TextView nome, sigla;
         private final EditText nota;
-
         public FormViewHolder(@NonNull View itemView) {
             super(itemView);
-            nome = itemView.findViewById(R.id.nome_melhoramento);
-            sigla = itemView.findViewById(R.id.sigla_melhoramento);
+            nome = itemView.findViewById(R.id.nome_caracteristica);
+            sigla = itemView.findViewById(R.id.sigla_caracteristica);
             nota = ((TextInputLayout) itemView.findViewById(R.id.notaContainer)).getEditText();
         }
 
         void bind(FormsXgpManejoMelhoramentoComponent item) {
             if (nome != null) {
-                nome.setText(item.getNomeMelhoramento());
+                nome.setText(item.getCaracteristica());
             } else {
                 Toast.makeText(itemView.getContext(), "Erro: TextView 'nome_melhoramento'", Toast.LENGTH_SHORT).show();
             }
