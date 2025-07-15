@@ -29,57 +29,48 @@ public class ManejoMelhoramentoService {
         this.observacaoService = observacaoService;
     }
 
-    public List<ManejoMelhoramento> getAllAsync() {
-        CompletableFuture<List<ManejoMelhoramento>> future = CompletableFuture.supplyAsync(() ->
-                melhoramentoManejoDao.getAll().parallelStream().collect(Collectors.toList()));
-        return future.join();
+    public CompletableFuture<List<ManejoMelhoramento>> getAllAsync() {
+        return CompletableFuture.supplyAsync(() ->
+                melhoramentoManejoDao.getAll());
     }
 
-    public ManejoMelhoramento getByIdAsync(Long id) {
-        CompletableFuture<ManejoMelhoramento> future = CompletableFuture.supplyAsync(() ->
+    public CompletableFuture<ManejoMelhoramento> getByIdAsync(Long id) {
+        return CompletableFuture.supplyAsync(() ->
                 melhoramentoManejoDao.findById(id));
-        return future.join();
     }
 
-    public long saveAsync(ManejoMelhoramento manejoMelhoramento) {
-        CompletableFuture<Long> future = CompletableFuture.supplyAsync(() ->
+    public CompletableFuture<Long> saveAsync(ManejoMelhoramento manejoMelhoramento) {
+        return CompletableFuture.supplyAsync(() ->
                 melhoramentoManejoDao.insert(manejoMelhoramento));
-        return future.join();
     }
 
-    public Melhoramento getMelhoramentoByIdAsync(Long id) {
-        CompletableFuture<Melhoramento> future = CompletableFuture.supplyAsync(() ->
+    public CompletableFuture<Melhoramento> getMelhoramentoByIdAsync(Long id) {
+        return CompletableFuture.supplyAsync(() ->
                 melhoramentoService.getByIdAsync(id));
-        return future.join();
     }
 
-    public List<Melhoramento> getAllMelhoramentosAsync() {
-        CompletableFuture<List<Melhoramento>> future = CompletableFuture.supplyAsync(() ->
-                melhoramentoService.getAllAsync().parallelStream().collect(Collectors.toList()));
-        return future.join();
+    public CompletableFuture<List<Melhoramento>> getAllMelhoramentosAsync() {
+        return CompletableFuture.supplyAsync(() ->
+                melhoramentoService.getAllAsync());
     }
 
-    public Caracteristica getCaracteristicaByIdAsync(Long id) {
-        CompletableFuture<Caracteristica> future = CompletableFuture.supplyAsync(() ->
+    public CompletableFuture<Caracteristica> getCaracteristicaByIdAsync(Long id) {
+        return CompletableFuture.supplyAsync(() ->
                 caracteristicaService.getByIdAsync(id));
-        return future.join();
     }
 
-    public List<Caracteristica> getAllCaracteristicasAsync() {
-        CompletableFuture<List<Caracteristica>> future = CompletableFuture.supplyAsync(() ->
-                caracteristicaService.getAllAsync().parallelStream().collect(Collectors.toList()));
-        return future.join();
+    public CompletableFuture<List<Caracteristica>> getAllCaracteristicasAsync() {
+        return CompletableFuture.supplyAsync(() ->
+                caracteristicaService.getAllAsync());
     }
 
-    public List<Observacao> getAllObservacoesAsync() {
-        CompletableFuture<List<Observacao>> future = CompletableFuture.supplyAsync(() ->
-                observacaoService.getAllAsync().parallelStream().collect(Collectors.toList()));
-        return future.join();
+    public CompletableFuture<List<Observacao>> getAllObservacoesAsync() {
+        return CompletableFuture.supplyAsync(() ->
+                observacaoService.getAllAsync());
     }
 
-    public Observacao getObservacaoByIdAsync(Long id)  {
-        CompletableFuture<Observacao> future = CompletableFuture.supplyAsync(() ->
+    public CompletableFuture<Observacao> getObservacaoByIdAsync(Long id) {
+        return CompletableFuture.supplyAsync(() ->
                 observacaoService.getByIdAsync(id));
-        return future.join();
     }
 }

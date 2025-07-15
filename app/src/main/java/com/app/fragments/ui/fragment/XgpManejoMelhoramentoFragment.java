@@ -30,138 +30,96 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class XgpManejoMelhoramentoFragment extends Fragment {
 
-    private static final int MIN_NOTE_VALUE = 1;
-    private static final int MAX_NOTE_VALUE = 6;
-    private final ManejoMelhoramentoService manejoMelhoramentoService;
-    private final Handler mainHandler;
-    private final ExecutorService backgroundExecutor;
-    private RecyclerView formsRecyclerView;
+    private final Handler mainHandler = new Handler(Looper.getMainLooper());
+    private final ManejoMelhoramentoService manejoService;
+
+    private RecyclerView recyclerView;
     private AutoCompleteTextView observationInput;
     private MaterialButton saveButton;
-    private String selectedObservation;
+
+    private ObservacaoComponent selectedObsComponent;
+    private long idMelhoramento;
 
     public XgpManejoMelhoramentoFragment(ManejoMelhoramentoService service) {
         super(R.layout.fragment_xgp_manejo_melhoramento);
-        this.manejoMelhoramentoService = service;
-        this.mainHandler = new Handler(Looper.getMainLooper());
-        this.backgroundExecutor = Executors.newCachedThreadPool();
+        this.manejoService = service;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        initializeViews(view);
-        loadInitialData();
-        setupSaveButton();
-    }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        backgroundExecutor.shutdown();
-    }
-
-    private void initializeViews(View view) {
-        formsRecyclerView = view.findViewById(R.id.recyclerVieXgpManejoMelhoramento);
+        recyclerView = view.findViewById(R.id.recyclerVieXgpManejoMelhoramento);
         observationInput = view.findViewById(R.id.spinner_manejo_melhoramento);
         saveButton = view.findViewById(R.id.send);
-    }
 
-    private void setupSaveButton() {
-        saveButton.setOnClickListener(v -> saveFormData());
-    }
-
-    private void saveFormData() {
-        showSuccessMessage("Dados salvos com sucesso!");
+        recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+        loadInitialData();
     }
 
     private void loadInitialData() {
-        CompletableFuture<List<FormsXgpManejoMelhoramentoComponent>> formsFuture = loadFormsAsync();
-        CompletableFuture<List<ObservacaoComponent>> observationsFuture = loadObservationsAsync();
+        CompletableFuture<List<Caracteristica>> futCaracteristicas = manejoService.getAllCaracteristicasAsync();
+        CompletableFuture<List<Observacao>> futObservacoes = manejoService.getAllObservacoesAsync();
 
-        CompletableFuture.allOf(formsFuture, observationsFuture)
-                .thenAcceptAsync(ignored -> {
-                    List<FormsXgpManejoMelhoramentoComponent> forms = formsFuture.join();
-                    List<ObservacaoComponent> observations = observationsFuture.join();
+        CompletableFuture.allOf(futCaracteristicas, futObservacoes)
+                .thenAcceptAsync(v -> {
+                    List<FormsXgpManejoMelhoramentoComponent> forms =
+                            mapCaracteristicasToForms(futCaracteristicas.join());
+                    List<ObservacaoComponent> observacoes =
+                            mapObservacoesToComponents(futObservacoes.join());
                     mainHandler.post(() -> {
-                        setupFormsRecyclerView(forms);
-                        setupObservationInput(observations);
+                        bindFormsToRecyclerView(forms);
+                        bindObservationsToDropdown(observacoes);
                     });
-                }, backgroundExecutor)
-                .exceptionally(throwable -> {
-                    handleError("Erro ao carregar dados iniciais.", throwable);
-                    return null;
-                });
+                })
+                .exceptionally(this::handleErrorReturn);
     }
 
-    private CompletableFuture<List<FormsXgpManejoMelhoramentoComponent>> loadFormsAsync() {
-        return CompletableFuture.supplyAsync(() -> {
-            List<Caracteristica> characteristics = manejoMelhoramentoService.getAllCaracteristicasAsync();
-            List<FormsXgpManejoMelhoramentoComponent> formComponents = new ArrayList<>();
-            for (Caracteristica caracteristica : characteristics) {
-                formComponents.add(new FormsXgpManejoMelhoramentoComponent(
-                        caracteristica.getDescricao(),
-                        caracteristica.getSigla(),
-                        null
-                ));
-            }
-            return formComponents;
-        }, backgroundExecutor);
+    private List<FormsXgpManejoMelhoramentoComponent> mapCaracteristicasToForms(List<Caracteristica> lista) {
+        List<FormsXgpManejoMelhoramentoComponent> forms = new ArrayList<>();
+        for (Caracteristica c : lista) {
+            forms.add(new FormsXgpManejoMelhoramentoComponent(c.getIdCaracteristica(), c.getDescricao(), c.getSigla(), null));
+        }
+        return forms;
     }
 
-    private CompletableFuture<List<ObservacaoComponent>> loadObservationsAsync() {
-        return CompletableFuture.supplyAsync(() -> {
-            List<Observacao> observations = manejoMelhoramentoService.getAllObservacoesAsync();
-            List<ObservacaoComponent> observationComponents = new ArrayList<>();
-            for (Observacao observacao : observations) {
-                observationComponents.add(new ObservacaoComponent(observacao.getSigla()));
-            }
-            return observationComponents;
-        }, backgroundExecutor);
+    private List<ObservacaoComponent> mapObservacoesToComponents(List<Observacao> lista) {
+        List<ObservacaoComponent> obs = new ArrayList<>();
+        for (Observacao o : lista) {
+            obs.add(new ObservacaoComponent(o.getIdObservacao(), o.getSigla()));
+        }
+        return obs;
     }
 
-    private void setupFormsRecyclerView(List<FormsXgpManejoMelhoramentoComponent> forms) {
-        FormsXgpManejoMelhoramentoAdapter adapter = new FormsXgpManejoMelhoramentoAdapter(requireContext(), forms);
-        formsRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
-        formsRecyclerView.setAdapter(adapter);
+    private void bindFormsToRecyclerView(List<FormsXgpManejoMelhoramentoComponent> forms) {
+        FormsXgpManejoMelhoramentoAdapter adapter =
+                new FormsXgpManejoMelhoramentoAdapter(requireContext(), forms);
+        recyclerView.setAdapter(adapter);
     }
 
-    private void setupObservationInput(List<ObservacaoComponent> observations) {
-        ObservacaoAdapter adapter = new ObservacaoAdapter(requireContext(), observations);
+    private void bindObservationsToDropdown(List<ObservacaoComponent> observacoes) {
+        ObservacaoAdapter adapter = new ObservacaoAdapter(requireContext(), observacoes);
         observationInput.setAdapter(adapter);
-        observationInput.setOnItemClickListener((parent, view, position, id) -> {
-            ObservacaoComponent selected = (ObservacaoComponent) parent.getItemAtPosition(position);
-            selectedObservation = selected.getObservacao();
-        });
+
+        observationInput.setOnItemClickListener((parent, view, position, id) ->
+                selectedObsComponent = (ObservacaoComponent) parent.getItemAtPosition(position)
+        );
     }
 
-    private String validateNoteRangeAndException(Integer initialNote, Integer finalNote, String exception) {
-        if (initialNote == null || finalNote == null) {
-            throw new IllegalArgumentException("Notas inicial e final não podem ser nulas.");
-        }
-        if (exception == null || exception.trim().isEmpty()) {
-            throw new IllegalArgumentException("A exceção não pode ser nula ou vazia.");
-        }
-        if (initialNote < MIN_NOTE_VALUE || finalNote > MAX_NOTE_VALUE || initialNote >= finalNote) {
-            throw new IllegalArgumentException("Intervalo de nota inválido. Esperado: " + MIN_NOTE_VALUE + " a " + MAX_NOTE_VALUE + ".");
-        }
-        return exception;
-    }
 
-    private void handleError(String userMessage, Throwable throwable) {
-        mainHandler.post(() -> {
-            Throwable actualCause = (throwable instanceof CompletionException) ? throwable.getCause() : throwable;
-            String fullMessage = userMessage + (actualCause != null && actualCause.getMessage() != null ? " Detalhes: " + actualCause.getMessage() : null);
-            Log.e(TAG, "Erro na operação: " + userMessage, actualCause);
-            showErrorMessage(fullMessage);
-        });
-    }
+    private Void handleErrorReturn(Throwable throwable) {
+        Throwable cause = throwable instanceof CompletionException
+                ? throwable.getCause()
+                : throwable;
 
+        String msg = cause != null ? cause.getMessage() : "Erro inesperado.";
+        Log.e(TAG, "Falha ao salvar: " + msg, cause);
+        mainHandler.post(() -> showErrorMessage(msg));
+        return null;
+    }
 
     private void showErrorMessage(String message) {
         new AlertDialog.Builder(requireContext())
@@ -171,10 +129,10 @@ public class XgpManejoMelhoramentoFragment extends Fragment {
                 .show();
     }
 
-    private void showSuccessMessage(String message) {
+    private void showSuccessMessage() {
         new AlertDialog.Builder(requireContext())
                 .setTitle("Sucesso")
-                .setMessage(message)
+                .setMessage("Dados salvos com sucesso!")
                 .setPositiveButton("OK", null)
                 .show();
     }

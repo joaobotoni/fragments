@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 @Entity(
@@ -27,6 +28,11 @@ import androidx.room.PrimaryKey;
                         childColumns = {"id_melhoramento", "id_observacao"},
                         onDelete = ForeignKey.SET_NULL
                 )
+        },
+        indices = {
+                @Index(value = {"id_melhoramento"}),
+                @Index(value = {"id_caracteristica", "id_melhoramento"}),
+                @Index(value = {"id_observacao", "id_melhoramento"})
         }
 )
 public class ManejoMelhoramento {
@@ -58,8 +64,7 @@ public class ManejoMelhoramento {
     public ManejoMelhoramento() {
     }
 
-    public ManejoMelhoramento(Long idManejoMelhoramento, Long idMelhoramento, Long idCaracteristica,
-                              Long idObservacao, Integer nota, String excessao, String observacao) {
+    public ManejoMelhoramento(@NonNull Long idManejoMelhoramento, @NonNull Long idMelhoramento, Long idCaracteristica, Long idObservacao, Integer nota, String excessao, String observacao) {
         this.idManejoMelhoramento = idManejoMelhoramento;
         this.idMelhoramento = idMelhoramento;
         this.idCaracteristica = idCaracteristica;
@@ -69,59 +74,111 @@ public class ManejoMelhoramento {
         this.observacao = observacao;
     }
 
-    public Long getIdManejoMelhoramento() {
-        return idManejoMelhoramento;
+    public ManejoMelhoramento(Builder builder) {
+        this.idManejoMelhoramento = builder.idManejoMelhoramento;
+        this.idMelhoramento = builder.idMelhoramento;
+        this.idCaracteristica = builder.idCaracteristica;
+        this.idObservacao = builder.idObservacao;
+        this.nota = builder.nota;
+        this.excessao = builder.excessao;
+        this.observacao = builder.observacao;
     }
 
-    public void setIdManejoMelhoramento(Long idManejoMelhoramento) {
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    @NonNull
+    public Long getIdManejoMelhoramento() { return idManejoMelhoramento; }
+
+    @NonNull
+    public Long getIdMelhoramento() { return idMelhoramento; }
+
+    public Long getIdCaracteristica() { return idCaracteristica; }
+
+    public Long getIdObservacao() { return idObservacao; }
+
+    public Integer getNota() { return nota; }
+
+    public String getExcessao() { return excessao; }
+
+    public String getObservacao() { return observacao; }
+
+    // Setters
+    public void setIdManejoMelhoramento(@NonNull Long idManejoMelhoramento) {
         this.idManejoMelhoramento = idManejoMelhoramento;
     }
 
-    public Long getIdMelhoramento() {
-        return idMelhoramento;
-    }
-
-    public void setIdMelhoramento(Long idMelhoramento) {
+    public void setIdMelhoramento(@NonNull Long idMelhoramento) {
         this.idMelhoramento = idMelhoramento;
-    }
-
-    public Long getIdCaracteristica() {
-        return idCaracteristica;
     }
 
     public void setIdCaracteristica(Long idCaracteristica) {
         this.idCaracteristica = idCaracteristica;
     }
 
-    public Long getIdObservacao() {
-        return idObservacao;
-    }
-
     public void setIdObservacao(Long idObservacao) {
         this.idObservacao = idObservacao;
-    }
-
-    public Integer getNota() {
-        return nota;
     }
 
     public void setNota(Integer nota) {
         this.nota = nota;
     }
 
-    public String getExcessao() {
-        return excessao;
-    }
-
     public void setExcessao(String excessao) {
         this.excessao = excessao;
     }
 
-    public String getObservacao() {
-        return observacao;
-    }
-
     public void setObservacao(String observacao) {
         this.observacao = observacao;
+    }
+
+    public static class Builder {
+        private Long idManejoMelhoramento;
+        private Long idMelhoramento;
+        private Long idCaracteristica;
+        private Long idObservacao;
+        private Integer nota;
+        private String excessao;
+        private String observacao;
+
+        public Builder idManejoMelhoramento(Long idManejoMelhoramento) {
+            this.idManejoMelhoramento = idManejoMelhoramento;
+            return this;
+        }
+
+        public Builder idMelhoramento(Long idMelhoramento) {
+            this.idMelhoramento = idMelhoramento;
+            return this;
+        }
+
+        public Builder idCaracteristica(Long idCaracteristica) {
+            this.idCaracteristica = idCaracteristica;
+            return this;
+        }
+
+        public Builder idObservacao(Long idObservacao) {
+            this.idObservacao = idObservacao;
+            return this;
+        }
+
+        public Builder nota(Integer nota) {
+            this.nota = nota;
+            return this;
+        }
+
+        public Builder excessao(String excessao) {
+            this.excessao = excessao;
+            return this;
+        }
+
+        public Builder observacao(String observacao) {
+            this.observacao = observacao;
+            return this;
+        }
+
+        public ManejoMelhoramento build() {
+            return new ManejoMelhoramento(this);
+        }
     }
 }

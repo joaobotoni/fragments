@@ -1,7 +1,9 @@
 package com.app.fragments.ui.activity;
 
 import android.os.Bundle;
+
 import androidx.appcompat.app.AppCompatActivity;
+
 import com.app.fragments.R;
 import com.app.fragments.data.db.AppDatabase;
 import com.app.fragments.service.CaracteristicaService;
@@ -38,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
                 observacaoService
         );
 
-        XgpManejoMelhoramentoFragment fragment = new XgpManejoMelhoramentoFragment(manejoMelhoramentoService);
+        XgpManejoMelhoramentoFragment fragment = new XgpManejoMelhoramentoFragment( manejoMelhoramentoService);
 
         getSupportFragmentManager().beginTransaction()
                 .setReorderingAllowed(true)
