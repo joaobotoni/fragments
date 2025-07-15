@@ -7,7 +7,7 @@
     android:padding="20dp">
 
     <TextView
-        android:id="@+id/textViewTitulo"
+        android:id="@+id/nome_melhoramento"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Nome Melhoramento"
@@ -26,7 +26,7 @@
         android:layout_height="0dp"
         android:clipToPadding="false"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintTop_toBottomOf="@id/textViewTitulo"
+        app:layout_constraintTop_toBottomOf="@id/nome_melhoramento"
         app:layout_constraintBottom_toTopOf="@id/spinner_container"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

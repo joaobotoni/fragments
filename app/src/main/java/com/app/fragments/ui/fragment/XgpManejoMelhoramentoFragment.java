@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
+import android.widget.EditText;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -14,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.app.fragments.R;
 import com.app.fragments.data.entities.Caracteristica;
+import com.app.fragments.data.entities.Melhoramento;
 import com.app.fragments.data.entities.Observacao;
 import com.app.fragments.service.ManejoMelhoramentoService;
 import com.app.fragments.ui.adapter.FormsXgpManejoMelhoramentoAdapter;
@@ -57,10 +60,10 @@ public class XgpManejoMelhoramentoFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         recyclerView = view.findViewById(R.id.recyclerVieXgpManejoMelhoramento);
         observationInput = view.findViewById(R.id.spinner_manejo_melhoramento);
-
+        TextView nomeMelhoramento = view.findViewById(R.id.nome_melhoramento);
+        nomeMelhoramento.setText(setupMelhoramento(nomeMelhoramento));
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         loadData();
     }
@@ -70,6 +73,12 @@ public class XgpManejoMelhoramentoFragment extends Fragment {
                 manejoService.getAllCaracteristicasAsync().thenAccept(this::setupForms),
                 manejoService.getAllObservacoesAsync().thenAccept(this::setupObservations)
         ).exceptionally(this::handleError);
+    }
+
+    private String setupMelhoramento(TextView editText) {
+        Melhoramento melhoramento = manejoService.getMelhoramentoByIdAsync(idMelhoramento).join();
+        assert melhoramento != null : handleError(new Throwable("Erro so setup de melhoramento"));
+        return melhoramento.getNome();
     }
 
     private void setupForms(List<Caracteristica> caracteristicas) {
