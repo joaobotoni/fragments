@@ -14,24 +14,22 @@ public class AppDatabaseCallback extends RoomDatabase.Callback {
         super.onCreate(db);
 
         Executors.newSingleThreadExecutor().execute(() -> {
-            db.execSQL("INSERT INTO xgp_melhoramento (id_melhoramento, nome) VALUES " +
-                    "(1, 'PMGZ')," +
-                    "(2, 'GENEPLUS')," +
-                    "(3, 'QUALITAS')," +
-                    "(4, 'GENCIS')");
+            db.execSQL("INSERT INTO xgp_melhoramento (id_melhoramento, nome) VALUES\n" +
+                    "  (1, 'PMGZ'),\n" +
+                    "  (2, 'GENEPLUS'),\n" +
+                    "  (3, 'QUALITAS'),\n" +
+                    "  (4, 'GENCIS');");
+            db.execSQL("INSERT INTO xgp_caracteristica (id_caracteristica, id_melhoramento, descricao, sigla, nota_inicial, nota_final, excessao) VALUES\n" +
+                    "  (1, 1, 'Conformação', 'C', 1, 6, 'excessao'),\n" +
+                    "  (2, 1, 'Pelagem', 'P', 1, 6, 'excessao'),\n" +
+                    "  (3, 2, 'Musculosidade', 'M', 1, 6, 'excessao'),\n" +
+                    "  (4, 2, 'Umbigo', 'U', 1, 6, 'excessao');");
 
-
-            db.execSQL("INSERT INTO xgp_caracteristica (id_caracteristica, id_melhoramento, descricao, sigla, nota_inicial, nota_final, excessao) VALUES " +
-                    "(1, 1, 'Conformação', 'C', 1, 6, '')," +
-                    "(2, 2, 'Pelagem', 'P', 1, 6, '')," +
-                    "(3, 3, 'Musculosidade', 'M', 1, 6, '')," +
-                    "(4, 4, 'Umbigo', 'U', 1, 6, '')");
-
-            db.execSQL("INSERT INTO xgp_observacao (id_observacao, id_melhoramento, sigla, descricao) VALUES " +
-                    "(1, 1, 'C', 'Conformação')," +
-                    "(2, 2, 'P', 'Pelagem')," +
-                    "(3, 3, 'M', 'Musculosidade')," +
-                    "(4, 4, 'U', 'Umbigo')");
+            db.execSQL("INSERT INTO xgp_observacao (id_observacao, id_melhoramento, sigla, descricao) VALUES\n" +
+                    "  (1, 1, 'C', 'Conformação'),\n" +
+                    "  (2, 2, 'P', 'Pelagem'),\n" +
+                    "  (3, 3, 'M', 'Musculosidade'),\n" +
+                    "  (4, 4, 'U', 'Umbigo');");
         });
     }
 }

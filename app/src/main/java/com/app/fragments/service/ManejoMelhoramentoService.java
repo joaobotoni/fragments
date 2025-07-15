@@ -30,8 +30,7 @@ public class ManejoMelhoramentoService {
     }
 
     public CompletableFuture<List<ManejoMelhoramento>> getAllAsync() {
-        return CompletableFuture.supplyAsync(() ->
-                melhoramentoManejoDao.getAll());
+        return CompletableFuture.supplyAsync(melhoramentoManejoDao::getAll);
     }
 
     public CompletableFuture<ManejoMelhoramento> getByIdAsync(Long id) {
@@ -49,28 +48,25 @@ public class ManejoMelhoramentoService {
                 melhoramentoService.getByIdAsync(id));
     }
 
-    public CompletableFuture<List<Melhoramento>> getAllMelhoramentosAsync() {
-        return CompletableFuture.supplyAsync(() ->
-                melhoramentoService.getAllAsync());
-    }
 
     public CompletableFuture<Caracteristica> getCaracteristicaByIdAsync(Long id) {
         return CompletableFuture.supplyAsync(() ->
                 caracteristicaService.getByIdAsync(id));
     }
-
-    public CompletableFuture<List<Caracteristica>> getAllCaracteristicasAsync() {
-        return CompletableFuture.supplyAsync(() ->
-                caracteristicaService.getAllAsync());
-    }
-
-    public CompletableFuture<List<Observacao>> getAllObservacoesAsync() {
-        return CompletableFuture.supplyAsync(() ->
-                observacaoService.getAllAsync());
-    }
-
     public CompletableFuture<Observacao> getObservacaoByIdAsync(Long id) {
         return CompletableFuture.supplyAsync(() ->
                 observacaoService.getByIdAsync(id));
     }
+
+    public CompletableFuture<List<Melhoramento>> getAllMelhoramentosAsync() {
+        return CompletableFuture.supplyAsync(melhoramentoService::getAllAsync);
+    }
+    public CompletableFuture<List<Caracteristica>> getAllCaracteristicasAsync() {
+        return CompletableFuture.supplyAsync(caracteristicaService::getAllAsync);
+    }
+
+    public CompletableFuture<List<Observacao>> getAllObservacoesAsync() {
+        return CompletableFuture.supplyAsync(observacaoService::getAllAsync);
+    }
+
 }

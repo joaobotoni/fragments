@@ -104,7 +104,6 @@ public class ManejoMelhoramento {
 
     public String getObservacao() { return observacao; }
 
-    // Setters
     public void setIdManejoMelhoramento(@NonNull Long idManejoMelhoramento) {
         this.idManejoMelhoramento = idManejoMelhoramento;
     }
