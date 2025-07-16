@@ -1,4 +1,4 @@
-package com.app.fragments.ui.components;
+package com.app.fragments.ui.components.consulta;
 
 public class XgpConsultaQtdPesoComponent {
 

@@ -35,10 +35,13 @@ public class Caracteristica {
     @ColumnInfo(name = "excessao")
     private String excessao;
 
+    @ColumnInfo(name = "eh_observacao")
+    private String isObservacao;
+
     public Caracteristica() {
     }
 
-    public Caracteristica(Long idMelhoramento, Long idCaracteristica, String descricao, String sigla, Integer notaInicial, Integer notaFinal, String excessao) {
+    public Caracteristica(@NonNull Long idMelhoramento, @NonNull Long idCaracteristica, String descricao, String sigla, Integer notaInicial, Integer notaFinal, String excessao, String isObservacao) {
         this.idMelhoramento = idMelhoramento;
         this.idCaracteristica = idCaracteristica;
         this.descricao = descricao;
@@ -46,21 +49,24 @@ public class Caracteristica {
         this.notaInicial = notaInicial;
         this.notaFinal = notaFinal;
         this.excessao = excessao;
+        this.isObservacao = isObservacao;
     }
 
+    @NonNull
     public Long getIdMelhoramento() {
         return idMelhoramento;
     }
 
-    public void setIdMelhoramento(Long idMelhoramento) {
+    public void setIdMelhoramento(@NonNull Long idMelhoramento) {
         this.idMelhoramento = idMelhoramento;
     }
 
+    @NonNull
     public Long getIdCaracteristica() {
         return idCaracteristica;
     }
 
-    public void setIdCaracteristica(Long idCaracteristica) {
+    public void setIdCaracteristica(@NonNull Long idCaracteristica) {
         this.idCaracteristica = idCaracteristica;
     }
 
@@ -102,5 +108,13 @@ public class Caracteristica {
 
     public void setExcessao(String excessao) {
         this.excessao = excessao;
+    }
+
+    public String getIsObservacao() {
+        return isObservacao;
+    }
+
+    public void setIsObservacao(String isObservacao) {
+        this.isObservacao = isObservacao;
     }
 }

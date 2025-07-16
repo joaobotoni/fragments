@@ -1,4 +1,4 @@
-package com.app.fragments.ui.adapter;
+package com.app.fragments.ui.adapter.consulta;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.app.fragments.R;
-import com.app.fragments.ui.components.XgpConsultaQtdPesoComponent;
+import com.app.fragments.ui.components.consulta.XgpConsultaQtdPesoComponent;
 
 import java.util.List;
 

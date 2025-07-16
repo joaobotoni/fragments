@@ -6,9 +6,6 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-
-
-
 @Entity(tableName = "xgp_melhoramento")
 public class Melhoramento {
     @NonNull

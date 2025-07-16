@@ -1,3 +1,4 @@
+
 package com.app.fragments.ui.fragment;
 
 import android.app.AlertDialog;
@@ -5,7 +6,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -17,12 +17,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.app.fragments.R;
 import com.app.fragments.data.entities.Caracteristica;
 import com.app.fragments.data.entities.Melhoramento;
-import com.app.fragments.data.entities.Observacao;
 import com.app.fragments.service.ManejoMelhoramentoService;
 import com.app.fragments.ui.adapter.FormsXgpManejoMelhoramentoAdapter;
-import com.app.fragments.ui.adapter.ObservacaoAdapter;
 import com.app.fragments.ui.components.FormsXgpManejoMelhoramentoComponent;
-import com.app.fragments.ui.components.ObservacaoComponent;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -33,7 +30,6 @@ public class XgpManejoMelhoramentoFragment extends Fragment {
     private final ManejoMelhoramentoService manejoService;
     private RecyclerView recyclerView;
     private AutoCompleteTextView observationInput;
-    private ObservacaoComponent selectedObsComponent;
     private long idMelhoramento;
 
     private XgpManejoMelhoramentoFragment(ManejoMelhoramentoService service) {
@@ -61,7 +57,6 @@ public class XgpManejoMelhoramentoFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         recyclerView = view.findViewById(R.id.recyclerVieXgpManejoMelhoramento);
-        observationInput = view.findViewById(R.id.spinner_manejo_melhoramento);
         TextView nomeMelhoramento = view.findViewById(R.id.nome_melhoramento);
         nomeMelhoramento.setText(setupMelhoramento(nomeMelhoramento));
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
@@ -70,8 +65,7 @@ public class XgpManejoMelhoramentoFragment extends Fragment {
 
     private void loadData() {
         CompletableFuture.allOf(
-                manejoService.getAllCaracteristicasAsync().thenAccept(this::setupForms),
-                manejoService.getAllObservacoesAsync().thenAccept(this::setupObservations)
+                manejoService.getAllCaracteristicasAsync().thenAccept(this::setupForms)
         ).exceptionally(this::handleError);
     }
 
@@ -87,21 +81,16 @@ public class XgpManejoMelhoramentoFragment extends Fragment {
                 .collect(Collectors.toList());
 
         requireActivity().runOnUiThread(() ->
-                recyclerView.setAdapter(new FormsXgpManejoMelhoramentoAdapter(requireContext(), forms))
-        );
+                recyclerView.setAdapter(new FormsXgpManejoMelhoramentoAdapter(requireContext(), forms)));
+
     }
 
-    private void setupObservations(List<Observacao> observacoes) {
-        List<ObservacaoComponent> components = observacoes.stream()
-                .map(o -> new ObservacaoComponent(o.getIdObservacao(), o.getSigla()))
-                .collect(Collectors.toList());
+    private boolean onValidar() {
+        return false;
+    }
 
-        requireActivity().runOnUiThread(() -> {
-            observationInput.setAdapter(new ObservacaoAdapter(requireContext(), components));
-            observationInput.setOnItemClickListener((parent, view, position, id) ->
-                    selectedObsComponent = (ObservacaoComponent) parent.getItemAtPosition(position)
-            );
-        });
+    private void onSalvar() {
+
     }
 
     private Void handleError(Throwable throwable) {
@@ -109,7 +98,7 @@ public class XgpManejoMelhoramentoFragment extends Fragment {
         Log.e("XgpFragment", message, throwable);
 
         requireActivity().runOnUiThread(() -> new AlertDialog.Builder(requireContext())
-                .setTitle("Erro")
+                .setTitle("Error")
                 .setMessage(message)
                 .setPositiveButton("OK", null).show());
         return null;

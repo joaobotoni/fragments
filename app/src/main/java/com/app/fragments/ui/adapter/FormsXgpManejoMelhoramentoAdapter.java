@@ -1,8 +1,6 @@
 package com.app.fragments.ui.adapter;
 
 import android.content.Context;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -71,55 +69,33 @@ public class FormsXgpManejoMelhoramentoAdapter extends RecyclerView.Adapter<Form
         }
 
         void bind(FormsXgpManejoMelhoramentoComponent item) {
-            if (nome != null) {
-                nome.setText(item.getCaracteristica());
-            } else {
-                Toast.makeText(itemView.getContext(), "Erro: TextView 'nome_caracteristica' não encontrado.", Toast.LENGTH_SHORT).show();
-            }
-            if (sigla != null) {
-                sigla.setText(item.getSigla());
-            } else {
-                Toast.makeText(itemView.getContext(), "Erro: TextView 'sigla_caracteristica' não encontrado.", Toast.LENGTH_SHORT).show();
+            if (nome != null) nome.setText(item.getCaracteristica());
+            else showToast("TextView 'nome_caracteristica' não encontrado.");
+
+            if (sigla != null) sigla.setText(item.getSigla());
+            else showToast("TextView 'sigla_caracteristica' não encontrado.");
+
+            if (nota == null) {
+                showToast("EditText 'nota' não encontrado.");
+                return;
             }
 
-            if (nota != null) {
-                if (nota.getTag() instanceof TextWatcher) {
-                    nota.removeTextChangedListener((TextWatcher) nota.getTag());
+            nota.setText(item.getNota() != null ? String.valueOf(item.getNota()) : "");
+
+            nota.setOnFocusChangeListener((v, hasFocus) -> {
+                if (!hasFocus) {
+                    String texto = nota.getText().toString().trim();
+                    try {
+                        item.setNota(Integer.parseInt(texto));
+                    } catch (NumberFormatException e) {
+                        item.setNota(null);
+                    }
                 }
+            });
+        }
 
-                if (item.getNota() != null) {
-                    nota.setText(String.valueOf(item.getNota()));
-                } else {
-                    nota.setHint("Digite sua nota");
-                }
-
-                TextWatcher watcher = new TextWatcher() {
-                    @Override
-                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                    }
-
-                    @Override
-                    public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    }
-
-                    @Override
-                    public void afterTextChanged(Editable editable) {
-                        Integer enteredNote = null;
-                        if (editable != null && !editable.toString().isEmpty()) {
-                            try {
-                                enteredNote = Integer.parseInt(editable.toString());
-                            } catch (NumberFormatException e) {
-                                Log.e("FormsAdapter", "Erro ao converter nota para Integer: " + editable.toString(), e);
-                            }
-                        }
-                        item.setNota(enteredNote);
-                    }
-                };
-                nota.addTextChangedListener(watcher);
-                nota.setTag(watcher);
-            } else {
-                Toast.makeText(itemView.getContext(), "Erro: EditText para 'nota' não encontrado.", Toast.LENGTH_SHORT).show();
-            }
+        private void showToast(String mensagem) {
+            Toast.makeText(itemView.getContext(), "Erro: " + mensagem, Toast.LENGTH_SHORT).show();
         }
     }
 }

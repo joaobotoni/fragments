@@ -26,16 +26,20 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_18
+        targetCompatibility = JavaVersion.VERSION_18
     }
 }
 
 dependencies {
     val room_version = "2.7.1"
-
+    val autoValue = "1.10.4"
     // Room
     implementation("androidx.room:room-runtime:$room_version")
+
+    // Anotação AutoValue
+    implementation("com.google.auto.value:auto-value-annotations:1.10.4")
+    annotationProcessor("com.google.auto.value:auto-value:$autoValue")
 
     // Gooogle Layout
     implementation("com.google.android.material:material:1.11.0")
