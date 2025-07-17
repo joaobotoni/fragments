@@ -6,8 +6,11 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import java.io.Serializable;
+
 @Entity(tableName = "xgp_melhoramento")
-public class Melhoramento {
+public class Melhoramento  {
+
     @NonNull
     @PrimaryKey(autoGenerate = false)
     @ColumnInfo(name = "id_melhoramento")

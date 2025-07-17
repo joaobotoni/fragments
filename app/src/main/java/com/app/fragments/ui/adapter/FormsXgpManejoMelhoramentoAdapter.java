@@ -1,10 +1,11 @@
 package com.app.fragments.ui.adapter;
 
 import android.content.Context;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -12,85 +13,85 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.app.fragments.R;
 import com.app.fragments.ui.components.FormsXgpManejoMelhoramentoComponent;
-import com.google.android.material.textfield.TextInputLayout;
+import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.List;
 
-public class FormsXgpManejoMelhoramentoAdapter extends RecyclerView.Adapter<FormsXgpManejoMelhoramentoAdapter.FormularioItemViewHolder> {
+public class FormsXgpManejoMelhoramentoAdapter extends RecyclerView.Adapter<FormsXgpManejoMelhoramentoAdapter.ViewHolder> {
 
-    private final List<FormsXgpManejoMelhoramentoComponent> dadosFormulario;
-
-    public FormsXgpManejoMelhoramentoAdapter(Context context, List<FormsXgpManejoMelhoramentoComponent> dadosFormulario) {
-        this.dadosFormulario = dadosFormulario;
+    private final Context context;
+    private final List<FormsXgpManejoMelhoramentoComponent> components;
+    public FormsXgpManejoMelhoramentoAdapter(Context context, List<FormsXgpManejoMelhoramentoComponent> components) {
+        this.context = context;
+        this.components = components;
     }
 
     @NonNull
     @Override
-    public FormularioItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_view_xgp_manejo_melhoramento_form, parent, false);
-        return new FormularioItemViewHolder(view);
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(context).inflate(R.layout.recycler_view_xgp_manejo_melhoramento_form, parent, false);
+        return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull FormularioItemViewHolder holder, int position) {
-        holder.bind(dadosFormulario.get(position));
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        FormsXgpManejoMelhoramentoComponent component = components.get(position);
+        holder.bind(component);
     }
 
     @Override
     public int getItemCount() {
-        return dadosFormulario.size();
+        return components.size();
     }
 
-    public List<FormsXgpManejoMelhoramentoComponent> getDadosFormularioAtualizados() {
-        return dadosFormulario;
+    public List<FormsXgpManejoMelhoramentoComponent> getComponents() {
+        return components;
     }
 
-    static class FormularioItemViewHolder extends RecyclerView.ViewHolder {
-        private final TextView textoCaracteristica;
-        private final TextView textoSigla;
-        private final EditText campoNota;
+    static class ViewHolder extends RecyclerView.ViewHolder {
+        private final TextView nomeCaracteristica;
+        private final TextView siglaCaracteristica;
+        private final TextInputEditText nota;
+        private TextWatcher notaWatcher;
 
-        public FormularioItemViewHolder(@NonNull View itemView) {
+        public ViewHolder(@NonNull View itemView) {
             super(itemView);
-
-            textoCaracteristica = itemView.findViewById(R.id.nome_caracteristica);
-            textoSigla = itemView.findViewById(R.id.sigla_caracteristica);
-
-            TextInputLayout containerNota = itemView.findViewById(R.id.notaContainer);
-            if (containerNota != null) {
-                campoNota = containerNota.getEditText();
-            } else {
-                campoNota = null;
-            }
+            nomeCaracteristica = itemView.findViewById(R.id.nome_caracteristica);
+            siglaCaracteristica = itemView.findViewById(R.id.sigla_caracteristica);
+            nota = itemView.findViewById(R.id.nota);
         }
 
-        void bind(FormsXgpManejoMelhoramentoComponent item) {
-            if (textoCaracteristica != null) {
-                textoCaracteristica.setText(item.getCaracteristica());
+        public void bind(FormsXgpManejoMelhoramentoComponent component) {
+            if (notaWatcher != null) {
+                nota.removeTextChangedListener(notaWatcher);
             }
 
-            if (textoSigla != null) {
-                textoSigla.setText(item.getSigla());
-            }
+            nomeCaracteristica.setText(component.getCaracteristica());
+            siglaCaracteristica.setText(component.getSigla());
+            nota.setText(component.getNota() != null ? String.valueOf(component.getNota()) : "");
 
-            if (campoNota == null) {
-                return;
-            }
+            notaWatcher = new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
-            campoNota.setText(item.getNota() != null ? String.valueOf(item.getNota()) : "");
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {}
 
-            campoNota.setOnFocusChangeListener(null);
-            campoNota.setOnFocusChangeListener((v, temFoco) -> {
-                if (!temFoco) {
-                    String textoDigitado = campoNota.getText().toString().trim();
+                @Override
+                public void afterTextChanged(Editable s) {
                     try {
-                        Integer notaFinal = textoDigitado.isEmpty() ? null : Integer.parseInt(textoDigitado);
-                        item.setNota(notaFinal);
+                        String text = s.toString().trim();
+                        if (text.isEmpty()) {
+                            component.setNota(null);
+                        } else {
+                            component.setNota(Integer.parseInt(text));
+                        }
                     } catch (NumberFormatException e) {
-                        item.setNota(null);
+                        component.setNota(null);
                     }
                 }
-            });
+            };
+            nota.addTextChangedListener(notaWatcher);
         }
     }
 }

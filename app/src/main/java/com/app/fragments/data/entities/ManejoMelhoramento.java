@@ -7,6 +7,8 @@ import androidx.room.ForeignKey;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
+import java.io.Serializable;
+
 @Entity(
         tableName = "xgp_manejo_melhoramento",
         foreignKeys = {
@@ -14,28 +16,21 @@ import androidx.room.PrimaryKey;
                         entity = Melhoramento.class,
                         parentColumns = "id_melhoramento",
                         childColumns = "id_melhoramento",
-                        onDelete = ForeignKey.CASCADE
+                        onDelete = ForeignKey.SET_NULL
                 ),
                 @ForeignKey(
                         entity = Caracteristica.class,
                         parentColumns = {"id_melhoramento", "id_caracteristica"},
                         childColumns = {"id_melhoramento", "id_caracteristica"},
-                        onDelete = ForeignKey.CASCADE
-                ),
-                @ForeignKey(
-                        entity = Observacao.class,
-                        parentColumns = {"id_melhoramento", "id_observacao"},
-                        childColumns = {"id_melhoramento", "id_observacao"},
                         onDelete = ForeignKey.SET_NULL
                 )
         },
         indices = {
                 @Index(value = {"id_melhoramento"}),
                 @Index(value = {"id_caracteristica", "id_melhoramento"}),
-                @Index(value = {"id_observacao", "id_melhoramento"})
         }
 )
-public class ManejoMelhoramento {
+public class ManejoMelhoramento  {
 
     @NonNull
     @PrimaryKey(autoGenerate = false)
@@ -49,39 +44,30 @@ public class ManejoMelhoramento {
     @ColumnInfo(name = "id_caracteristica")
     private Long idCaracteristica;
 
-    @ColumnInfo(name = "id_observacao")
-    private Long idObservacao;
-
     @ColumnInfo(name = "nota")
     private Integer nota;
 
     @ColumnInfo(name = "excessao")
     private String excessao;
 
-    @ColumnInfo(name = "observacao")
-    private String observacao;
-
     public ManejoMelhoramento() {
     }
 
-    public ManejoMelhoramento(@NonNull Long idManejoMelhoramento, @NonNull Long idMelhoramento, Long idCaracteristica, Long idObservacao, Integer nota, String excessao, String observacao) {
+    public ManejoMelhoramento(@NonNull Long idManejoMelhoramento, @NonNull Long idMelhoramento, Long idCaracteristica, Integer nota, String excessao) {
         this.idManejoMelhoramento = idManejoMelhoramento;
         this.idMelhoramento = idMelhoramento;
         this.idCaracteristica = idCaracteristica;
-        this.idObservacao = idObservacao;
+
         this.nota = nota;
         this.excessao = excessao;
-        this.observacao = observacao;
     }
 
     public ManejoMelhoramento(Builder builder) {
         this.idManejoMelhoramento = builder.idManejoMelhoramento;
         this.idMelhoramento = builder.idMelhoramento;
         this.idCaracteristica = builder.idCaracteristica;
-        this.idObservacao = builder.idObservacao;
         this.nota = builder.nota;
         this.excessao = builder.excessao;
-        this.observacao = builder.observacao;
     }
 
     public static Builder builder() {
@@ -96,13 +82,10 @@ public class ManejoMelhoramento {
 
     public Long getIdCaracteristica() { return idCaracteristica; }
 
-    public Long getIdObservacao() { return idObservacao; }
-
     public Integer getNota() { return nota; }
 
     public String getExcessao() { return excessao; }
 
-    public String getObservacao() { return observacao; }
 
     public void setIdManejoMelhoramento(@NonNull Long idManejoMelhoramento) {
         this.idManejoMelhoramento = idManejoMelhoramento;
@@ -116,20 +99,12 @@ public class ManejoMelhoramento {
         this.idCaracteristica = idCaracteristica;
     }
 
-    public void setIdObservacao(Long idObservacao) {
-        this.idObservacao = idObservacao;
-    }
-
     public void setNota(Integer nota) {
         this.nota = nota;
     }
 
     public void setExcessao(String excessao) {
         this.excessao = excessao;
-    }
-
-    public void setObservacao(String observacao) {
-        this.observacao = observacao;
     }
 
     public static class Builder {
@@ -139,8 +114,6 @@ public class ManejoMelhoramento {
         private Long idObservacao;
         private Integer nota;
         private String excessao;
-        private String observacao;
-
         public Builder idManejoMelhoramento(Long idManejoMelhoramento) {
             this.idManejoMelhoramento = idManejoMelhoramento;
             return this;
@@ -168,11 +141,6 @@ public class ManejoMelhoramento {
 
         public Builder excessao(String excessao) {
             this.excessao = excessao;
-            return this;
-        }
-
-        public Builder observacao(String observacao) {
-            this.observacao = observacao;
             return this;
         }
 

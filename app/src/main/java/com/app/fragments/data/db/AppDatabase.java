@@ -17,17 +17,17 @@ import com.app.fragments.data.entities.Observacao;
 
 @Database(
         entities = {
+                Melhoramento.class,
                 Caracteristica.class,
                 Observacao.class,
-                Melhoramento.class,
                 ManejoMelhoramento.class
         },
-        version = 1,
+        version = 1, // ← Voltei para versão 1
         exportSchema = false
 )
 public abstract class AppDatabase extends RoomDatabase {
 
-    public static volatile AppDatabase INSTANCE;
+    private static volatile AppDatabase INSTANCE;
 
     public abstract MelhoramentoDao melhoramentoDao();
     public abstract MelhoramentoManejoDao manejoMelhoramentoDao();
@@ -38,13 +38,24 @@ public abstract class AppDatabase extends RoomDatabase {
         if (INSTANCE == null) {
             synchronized (AppDatabase.class) {
                 if (INSTANCE == null) {
-                    INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
-                                    AppDatabase.class, "db")
+                    INSTANCE = Room.databaseBuilder(
+                                    context.getApplicationContext(),
+                                    AppDatabase.class,
+                                    "app_database" // ← Nome mais descritivo
+                            )
+                            .fallbackToDestructiveMigration() // ← Mantém para desenvolvimento
                             .addCallback(new AppDatabaseCallback())
                             .build();
                 }
             }
         }
         return INSTANCE;
+    }
+
+    /**
+     * Método para limpar a instância (útil para testes)
+     */
+    public static void clearInstance() {
+        INSTANCE = null;
     }
 }

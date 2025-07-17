@@ -5,9 +5,12 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Index;
 
+import java.io.Serializable;
+
 @Entity(tableName = "xgp_observacao", primaryKeys = {"id_melhoramento", "id_observacao"},
         indices = {@Index(value = "id_observacao", unique = true)})
-public class Observacao {
+public class Observacao  {
+
 
     @NonNull
     @ColumnInfo(name = "id_melhoramento")

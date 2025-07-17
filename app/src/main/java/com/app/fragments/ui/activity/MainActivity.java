@@ -6,11 +6,17 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.app.fragments.R;
 import com.app.fragments.data.db.AppDatabase;
+import com.app.fragments.data.entities.Melhoramento;
 import com.app.fragments.service.CaracteristicaService;
 import com.app.fragments.service.ManejoMelhoramentoService;
 import com.app.fragments.service.MelhoramentoService;
 import com.app.fragments.service.ObservacaoService;
 import com.app.fragments.ui.fragment.XgpManejoMelhoramentoFragment;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 public class MainActivity extends AppCompatActivity {
 

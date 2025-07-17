@@ -73,7 +73,7 @@
                 android:id="@+id/nota"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                tools:hint="Digite a nota"
+                android:hint="Digite a nota"
                 android:importantForAccessibility="yes"
                 android:inputType="number" />
         </com.google.android.material.textfield.TextInputLayout>
