@@ -1,13 +1,11 @@
 package com.app.fragments.ui.adapter;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -18,84 +16,81 @@ import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.List;
 
-public class FormsXgpManejoMelhoramentoAdapter extends RecyclerView.Adapter<FormsXgpManejoMelhoramentoAdapter.FormViewHolder> {
+public class FormsXgpManejoMelhoramentoAdapter extends RecyclerView.Adapter<FormsXgpManejoMelhoramentoAdapter.FormularioItemViewHolder> {
 
-    private final Context context;
-    private final List<FormsXgpManejoMelhoramentoComponent> list;
+    private final List<FormsXgpManejoMelhoramentoComponent> dadosFormulario;
 
-    public FormsXgpManejoMelhoramentoAdapter(Context context, List<FormsXgpManejoMelhoramentoComponent> list) {
-        this.context = context;
-        this.list = list;
+    public FormsXgpManejoMelhoramentoAdapter(Context context, List<FormsXgpManejoMelhoramentoComponent> dadosFormulario) {
+        this.dadosFormulario = dadosFormulario;
     }
 
     @NonNull
     @Override
-    public FormViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.recycler_view_xgp_manejo_melhoramento_form, parent, false);
-        return new FormViewHolder(view);
+    public FormularioItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_view_xgp_manejo_melhoramento_form, parent, false);
+        return new FormularioItemViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull FormViewHolder holder, int position) {
-        holder.bind(list.get(position));
+    public void onBindViewHolder(@NonNull FormularioItemViewHolder holder, int position) {
+        holder.bind(dadosFormulario.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return list.size();
+        return dadosFormulario.size();
     }
 
-    public List<FormsXgpManejoMelhoramentoComponent> getFormsList() {
-        return list;
+    public List<FormsXgpManejoMelhoramentoComponent> getDadosFormularioAtualizados() {
+        return dadosFormulario;
     }
 
-    static class FormViewHolder extends RecyclerView.ViewHolder {
-        private final TextView nome;
-        private final TextView sigla;
-        private final EditText nota;
+    static class FormularioItemViewHolder extends RecyclerView.ViewHolder {
+        private final TextView textoCaracteristica;
+        private final TextView textoSigla;
+        private final EditText campoNota;
 
-        public FormViewHolder(@NonNull View itemView) {
+        public FormularioItemViewHolder(@NonNull View itemView) {
             super(itemView);
-            nome = itemView.findViewById(R.id.nome_caracteristica);
-            sigla = itemView.findViewById(R.id.sigla_caracteristica);
 
-            TextInputLayout notaContainer = itemView.findViewById(R.id.notaContainer);
-            if (notaContainer != null) {
-                nota = notaContainer.getEditText();
+            textoCaracteristica = itemView.findViewById(R.id.nome_caracteristica);
+            textoSigla = itemView.findViewById(R.id.sigla_caracteristica);
+
+            TextInputLayout containerNota = itemView.findViewById(R.id.notaContainer);
+            if (containerNota != null) {
+                campoNota = containerNota.getEditText();
             } else {
-                Log.e("FormViewHolder", "TextInputLayout 'notaContainer' não encontrado no layout.");
-                nota = null;
+                campoNota = null;
             }
         }
 
         void bind(FormsXgpManejoMelhoramentoComponent item) {
-            if (nome != null) nome.setText(item.getCaracteristica());
-            else showToast("TextView 'nome_caracteristica' não encontrado.");
+            if (textoCaracteristica != null) {
+                textoCaracteristica.setText(item.getCaracteristica());
+            }
 
-            if (sigla != null) sigla.setText(item.getSigla());
-            else showToast("TextView 'sigla_caracteristica' não encontrado.");
+            if (textoSigla != null) {
+                textoSigla.setText(item.getSigla());
+            }
 
-            if (nota == null) {
-                showToast("EditText 'nota' não encontrado.");
+            if (campoNota == null) {
                 return;
             }
 
-            nota.setText(item.getNota() != null ? String.valueOf(item.getNota()) : "");
+            campoNota.setText(item.getNota() != null ? String.valueOf(item.getNota()) : "");
 
-            nota.setOnFocusChangeListener((v, hasFocus) -> {
-                if (!hasFocus) {
-                    String texto = nota.getText().toString().trim();
+            campoNota.setOnFocusChangeListener(null);
+            campoNota.setOnFocusChangeListener((v, temFoco) -> {
+                if (!temFoco) {
+                    String textoDigitado = campoNota.getText().toString().trim();
                     try {
-                        item.setNota(Integer.parseInt(texto));
+                        Integer notaFinal = textoDigitado.isEmpty() ? null : Integer.parseInt(textoDigitado);
+                        item.setNota(notaFinal);
                     } catch (NumberFormatException e) {
                         item.setNota(null);
                     }
                 }
             });
-        }
-
-        private void showToast(String mensagem) {
-            Toast.makeText(itemView.getContext(), "Erro: " + mensagem, Toast.LENGTH_SHORT).show();
         }
     }
 }

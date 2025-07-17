@@ -43,7 +43,7 @@ public class XgpManejoMelhoramentoFragment extends Fragment {
                 .exceptionally(this::handleError);
     }
 
-    private void setupRecyclerView(List<Caracteristica> caracteristicas) {
+    private void setupRecyclerView(@NonNull List<Caracteristica> caracteristicas) {
         List<FormsXgpManejoMelhoramentoComponent> formComponents = caracteristicas.stream()
                 .map(c -> new FormsXgpManejoMelhoramentoComponent(
                         c.getIdCaracteristica(), c.getDescricao(), c.getSigla(), null))
@@ -53,7 +53,7 @@ public class XgpManejoMelhoramentoFragment extends Fragment {
             recyclerView.setAdapter(new FormsXgpManejoMelhoramentoAdapter(requireContext(), formComponents));
         });
     }
-    private Void handleError(Throwable throwable) {
+    private Void handleError(@NonNull Throwable throwable) {
         String message = throwable.getCause() != null ? throwable.getCause().getMessage() : "Unexpected error";
         Log.e("Manejo Melhoramento", message, throwable);
 
