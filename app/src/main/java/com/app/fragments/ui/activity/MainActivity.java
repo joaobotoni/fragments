@@ -40,14 +40,7 @@ public class MainActivity extends AppCompatActivity {
                 observacaoService
         );
 
-        long idMelhoramento = 4;
-
-        XgpManejoMelhoramentoFragment fragment =
-                XgpManejoMelhoramentoFragment.newInstance(idMelhoramento, manejoMelhoramentoService);
-
-        getSupportFragmentManager().beginTransaction()
-                .setReorderingAllowed(true)
-                .replace(R.id.fragment_container, fragment)
-                .commit();
+        XgpManejoMelhoramentoFragment fragment = new XgpManejoMelhoramentoFragment(manejoMelhoramentoService);
+        getSupportFragmentManager().beginTransaction().setReorderingAllowed(true).replace(R.id.fragment_container, fragment).commit();
     }
 }

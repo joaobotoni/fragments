@@ -1,12 +1,10 @@
 package com.app.fragments.service;
 
-
 import com.app.fragments.data.dao.MelhoramentoDao;
 import com.app.fragments.data.entities.Melhoramento;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.stream.Collectors;
 
 public class MelhoramentoService {
 
@@ -16,13 +14,11 @@ public class MelhoramentoService {
         this.dao = dao;
     }
 
-    public List<Melhoramento> getAllAsync() {
-        CompletableFuture<List<Melhoramento>> future = CompletableFuture.supplyAsync(() -> dao.getAll().parallelStream().collect(Collectors.toList()));
-        return future.join();
+    public CompletableFuture<List<Melhoramento>> getAllAsync() {
+        return CompletableFuture.supplyAsync(dao::getAll);
     }
 
-    public Melhoramento getByIdAsync(Long id) {
-        CompletableFuture<Melhoramento> future = CompletableFuture.supplyAsync(() -> dao.findById(id));
-        return future.join();
+    public CompletableFuture<Melhoramento> getByIdAsync(Long id) {
+        return CompletableFuture.supplyAsync(() -> dao.findById(id));
     }
 }

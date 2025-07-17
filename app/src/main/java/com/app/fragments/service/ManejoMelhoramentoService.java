@@ -8,7 +8,6 @@ import com.app.fragments.data.entities.Observacao;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.stream.Collectors;
 
 public class ManejoMelhoramentoService {
 
@@ -44,29 +43,26 @@ public class ManejoMelhoramentoService {
     }
 
     public CompletableFuture<Melhoramento> getMelhoramentoByIdAsync(Long id) {
-        return CompletableFuture.supplyAsync(() ->
-                melhoramentoService.getByIdAsync(id));
+        return melhoramentoService.getByIdAsync(id);
     }
-
 
     public CompletableFuture<Caracteristica> getCaracteristicaByIdAsync(Long id) {
-        return CompletableFuture.supplyAsync(() ->
-                caracteristicaService.getByIdAsync(id));
+        return caracteristicaService.getByIdAsync(id);
     }
+
     public CompletableFuture<Observacao> getObservacaoByIdAsync(Long id) {
-        return CompletableFuture.supplyAsync(() ->
-                observacaoService.getByIdAsync(id));
+        return observacaoService.getByIdAsync(id);
     }
 
     public CompletableFuture<List<Melhoramento>> getAllMelhoramentosAsync() {
-        return CompletableFuture.supplyAsync(melhoramentoService::getAllAsync);
+        return melhoramentoService.getAllAsync();
     }
+
     public CompletableFuture<List<Caracteristica>> getAllCaracteristicasAsync() {
-        return CompletableFuture.supplyAsync(caracteristicaService::getAllAsync);
+        return caracteristicaService.getAllAsync();
     }
 
     public CompletableFuture<List<Observacao>> getAllObservacoesAsync() {
-        return CompletableFuture.supplyAsync(observacaoService::getAllAsync);
+        return observacaoService.getAllAsync();
     }
-
 }
