@@ -6,7 +6,6 @@ import com.app.fragments.data.entities.Observacao;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-// import java.util.stream.Collectors; // Removido, pois não é mais necessário
 
 public class ObservacaoService {
     private final ObservacaoDao dao;

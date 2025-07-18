@@ -1,19 +1,21 @@
 package com.app.fragments.ui.adapter;
 
-import android.content.Context;
+import android.view.View;
 import android.text.Editable;
+import android.view.ViewGroup;
+import android.content.Context;
+import android.widget.TextView;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.app.fragments.R;
-import com.app.fragments.ui.components.FormsXgpManejoMelhoramentoComponent;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
+import com.app.fragments.ui.components.FormsXgpManejoMelhoramentoComponent;
 
 import java.util.List;
 
@@ -21,6 +23,7 @@ public class FormsXgpManejoMelhoramentoAdapter extends RecyclerView.Adapter<Form
 
     private final Context context;
     private final List<FormsXgpManejoMelhoramentoComponent> components;
+
     public FormsXgpManejoMelhoramentoAdapter(Context context, List<FormsXgpManejoMelhoramentoComponent> components) {
         this.context = context;
         this.components = components;
@@ -52,6 +55,7 @@ public class FormsXgpManejoMelhoramentoAdapter extends RecyclerView.Adapter<Form
         private final TextView nomeCaracteristica;
         private final TextView siglaCaracteristica;
         private final TextInputEditText nota;
+        private final TextInputLayout layout;
         private TextWatcher notaWatcher;
 
         public ViewHolder(@NonNull View itemView) {
@@ -59,6 +63,8 @@ public class FormsXgpManejoMelhoramentoAdapter extends RecyclerView.Adapter<Form
             nomeCaracteristica = itemView.findViewById(R.id.nome_caracteristica);
             siglaCaracteristica = itemView.findViewById(R.id.sigla_caracteristica);
             nota = itemView.findViewById(R.id.nota);
+            layout = itemView.findViewById(R.id.notaContainer);
+            layout.setHintEnabled(false);
         }
 
         public void bind(FormsXgpManejoMelhoramentoComponent component) {
@@ -83,15 +89,45 @@ public class FormsXgpManejoMelhoramentoAdapter extends RecyclerView.Adapter<Form
                         String text = s.toString().trim();
                         if (text.isEmpty()) {
                             component.setNota(null);
+                            resetarEstilo();
                         } else {
-                            component.setNota(Integer.parseInt(text));
+                            int notaDigitada = Integer.parseInt(text);
+                            component.setNota(notaDigitada);
+                            validarNota(notaDigitada);
                         }
                     } catch (NumberFormatException e) {
                         component.setNota(null);
+                        marcarComoInvalido();
                     }
                 }
             };
             nota.addTextChangedListener(notaWatcher);
+        }
+
+        private void validarNota(int nota) {
+            if (nota >= 1 && nota <= 6) {
+                marcarComoValido();
+            } else {
+                marcarComoInvalido();
+            }
+        }
+
+        private void marcarComoValido() {
+            layout.setBoxStrokeColor(ContextCompat.getColor(itemView.getContext(), R.color.colorValid));
+            layout.setBoxStrokeWidth(2);
+            layout.setError(null);
+        }
+
+        private void marcarComoInvalido() {
+            layout.setBoxStrokeColor(ContextCompat.getColor(itemView.getContext(), R.color.colorError));
+            layout.setBoxStrokeWidth(3);
+            layout.setError("Nota deve ser entre 1 e 6");
+        }
+
+        private void resetarEstilo() {
+            layout.setBoxStrokeColor(ContextCompat.getColor(itemView.getContext(), R.color.colorPrimary));
+            layout.setBoxStrokeWidth(1);
+            layout.setError(null);
         }
     }
 }

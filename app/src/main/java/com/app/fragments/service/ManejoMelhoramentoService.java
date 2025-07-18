@@ -1,16 +1,16 @@
 package com.app.fragments.service;
 
 import android.util.Log;
-import com.app.fragments.data.dao.MelhoramentoManejoDao;
-import com.app.fragments.data.entities.Caracteristica;
-import com.app.fragments.data.entities.ManejoMelhoramento;
-import com.app.fragments.data.entities.Melhoramento;
 import com.app.fragments.data.entities.Observacao;
+import com.app.fragments.data.entities.Melhoramento;
+import com.app.fragments.data.entities.Caracteristica;
+import com.app.fragments.data.dao.MelhoramentoManejoDao;
+import com.app.fragments.data.entities.ManejoMelhoramento;
 
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+import java.util.concurrent.CompletableFuture;
 
 public class ManejoMelhoramentoService {
     private static final String TAG = "ManejoMelhoramentoService";

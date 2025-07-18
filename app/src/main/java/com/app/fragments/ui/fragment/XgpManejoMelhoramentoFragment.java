@@ -1,10 +1,10 @@
 package com.app.fragments.ui.fragment;
 
-import android.app.AlertDialog;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
+import android.app.AlertDialog;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,22 +20,18 @@ import com.app.fragments.ui.adapter.FormsXgpManejoMelhoramentoAdapter;
 import com.app.fragments.ui.components.FormsXgpManejoMelhoramentoComponent;
 import com.google.android.material.button.MaterialButton;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 public class XgpManejoMelhoramentoFragment extends Fragment {
 
     private static final String TAG = "ManejoMelhoramentoFragment";
     private static final String ARG_ID_MELHORAMENTO = "id_melhoramento";
-
-    // Views
     private RecyclerView recyclerViewCaracteristicas;
     private MaterialButton botaoSalvarManejos;
     private FormsXgpManejoMelhoramentoAdapter adapterManejos;
-
-    // Data
     private final ManejoMelhoramentoService manejoMelhoramentoService;
     private final List<FormsXgpManejoMelhoramentoComponent> componentesFormularioManejos = new ArrayList<>();
     private final List<Caracteristica> listaCaracteristicas = new ArrayList<>();
@@ -68,6 +64,7 @@ public class XgpManejoMelhoramentoFragment extends Fragment {
         configurarListeners();
         carregarCaracteristicas();
     }
+
     private Long extrairIdDosArgumentos() {
         if (getArguments() == null) return null;
         long id = getArguments().getLong(ARG_ID_MELHORAMENTO, -1L);
@@ -120,8 +117,7 @@ public class XgpManejoMelhoramentoFragment extends Fragment {
     }
 
     private boolean isCaracteristicaValida(Caracteristica caracteristica) {
-        return idMelhoramentoReferencia == null ||
-                Objects.equals(caracteristica.getIdMelhoramento(), idMelhoramentoReferencia);
+        return idMelhoramentoReferencia == null || Objects.equals(caracteristica.getIdMelhoramento(), idMelhoramentoReferencia);
     }
 
     private FormsXgpManejoMelhoramentoComponent criarComponenteFormulario(Caracteristica caracteristica) {
@@ -129,7 +125,8 @@ public class XgpManejoMelhoramentoFragment extends Fragment {
                 caracteristica.getIdCaracteristica(),
                 caracteristica.getDescricao(),
                 caracteristica.getSigla(),
-                null
+                null,
+                caracteristica.getExcessao()
         );
     }
 
@@ -147,10 +144,13 @@ public class XgpManejoMelhoramentoFragment extends Fragment {
         executarNaThreadPrincipal(() -> exibirErro(throwable));
         return null;
     }
+
     private void processarSalvamento() {
         List<FormsXgpManejoMelhoramentoComponent> componentes = obterComponentesParaSalvar();
 
         if (!validarComponentesParaSalvar(componentes)) return;
+
+        if (!validarNotas(componentes)) return;
 
         iniciarProcessoSalvamento();
         salvarManejos(componentes);
@@ -163,6 +163,39 @@ public class XgpManejoMelhoramentoFragment extends Fragment {
     private boolean validarComponentesParaSalvar(List<FormsXgpManejoMelhoramentoComponent> componentes) {
         if (componentes.isEmpty()) {
             exibirToast("Nenhum campo foi preenchido para salvar.");
+            return false;
+        }
+        return true;
+    }
+
+    private boolean validarNotas(List<FormsXgpManejoMelhoramentoComponent> componentes) {
+        for (FormsXgpManejoMelhoramentoComponent componente : componentes) {
+            Caracteristica caracteristica = encontrarCaracteristicaPorId(componente.getId());
+            if (caracteristica != null && !validarNotaNoFormulario(componente.getNota(), caracteristica)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private Caracteristica encontrarCaracteristicaPorId(Long idCaracteristica) {
+        return listaCaracteristicas.stream()
+                .filter(c -> Objects.equals(c.getIdCaracteristica(), idCaracteristica))
+                .findFirst()
+                .orElse(null);
+    }
+
+    private boolean validarNotaNoFormulario(Integer nota, Caracteristica caracteristica) {
+        if (nota == null || caracteristica == null) {
+            exibirErro(new Throwable("Erro inesperado na hora de salvar as notas"));
+            return false;
+        }
+
+        Integer notaInicial = caracteristica.getNotaInicial();
+        Integer notaFinal = caracteristica.getNotaFinal();
+
+        if (nota < notaInicial || nota > notaFinal) {
+            exibirErro(new Throwable("A nota precisa estar entre " + notaInicial + " e " + notaFinal));
             return false;
         }
         return true;
@@ -195,6 +228,7 @@ public class XgpManejoMelhoramentoFragment extends Fragment {
                 idMelhoramento,
                 idCaracteristica,
                 componente.getNota(),
+                componente.getExcessao(),
                 null
         );
     }

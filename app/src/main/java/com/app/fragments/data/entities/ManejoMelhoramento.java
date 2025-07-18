@@ -30,7 +30,7 @@ import java.io.Serializable;
                 @Index(value = {"id_caracteristica", "id_melhoramento"}),
         }
 )
-public class ManejoMelhoramento  {
+public class ManejoMelhoramento implements Serializable {
 
     @NonNull
     @PrimaryKey(autoGenerate = false)
@@ -50,16 +50,19 @@ public class ManejoMelhoramento  {
     @ColumnInfo(name = "excessao")
     private String excessao;
 
+    @ColumnInfo(name = "observacao")
+    private String observacao;
+
     public ManejoMelhoramento() {
     }
 
-    public ManejoMelhoramento(@NonNull Long idManejoMelhoramento, @NonNull Long idMelhoramento, Long idCaracteristica, Integer nota, String excessao) {
+    public ManejoMelhoramento(@NonNull Long idManejoMelhoramento, @NonNull Long idMelhoramento, Long idCaracteristica, Integer nota, String excessao, String observacao) {
         this.idManejoMelhoramento = idManejoMelhoramento;
         this.idMelhoramento = idMelhoramento;
         this.idCaracteristica = idCaracteristica;
-
         this.nota = nota;
         this.excessao = excessao;
+        this.observacao = observacao;
     }
 
     public ManejoMelhoramento(Builder builder) {
@@ -68,6 +71,7 @@ public class ManejoMelhoramento  {
         this.idCaracteristica = builder.idCaracteristica;
         this.nota = builder.nota;
         this.excessao = builder.excessao;
+        this.observacao = builder.observacao;
     }
 
     public static Builder builder() {
@@ -86,6 +90,7 @@ public class ManejoMelhoramento  {
 
     public String getExcessao() { return excessao; }
 
+    public String getObservacao() { return observacao; }
 
     public void setIdManejoMelhoramento(@NonNull Long idManejoMelhoramento) {
         this.idManejoMelhoramento = idManejoMelhoramento;
@@ -107,13 +112,16 @@ public class ManejoMelhoramento  {
         this.excessao = excessao;
     }
 
+    public void setObservacao(String observacao) { this.observacao = observacao; }
+
     public static class Builder {
         private Long idManejoMelhoramento;
         private Long idMelhoramento;
         private Long idCaracteristica;
-        private Long idObservacao;
         private Integer nota;
         private String excessao;
+        private String observacao;
+
         public Builder idManejoMelhoramento(Long idManejoMelhoramento) {
             this.idManejoMelhoramento = idManejoMelhoramento;
             return this;
@@ -129,11 +137,6 @@ public class ManejoMelhoramento  {
             return this;
         }
 
-        public Builder idObservacao(Long idObservacao) {
-            this.idObservacao = idObservacao;
-            return this;
-        }
-
         public Builder nota(Integer nota) {
             this.nota = nota;
             return this;
@@ -141,6 +144,11 @@ public class ManejoMelhoramento  {
 
         public Builder excessao(String excessao) {
             this.excessao = excessao;
+            return this;
+        }
+
+        public Builder observacao(String observacao) {
+            this.observacao = observacao;
             return this;
         }
 

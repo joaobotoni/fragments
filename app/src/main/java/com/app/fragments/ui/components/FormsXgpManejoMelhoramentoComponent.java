@@ -5,13 +5,13 @@ public class FormsXgpManejoMelhoramentoComponent {
     private String caracteristica;
     private String sigla;
     private Integer nota;
-
-
-    public FormsXgpManejoMelhoramentoComponent(Long id, String caracteristica, String sigla, Integer nota) {
+    private String excessao;
+    public FormsXgpManejoMelhoramentoComponent(Long id, String caracteristica, String sigla, Integer nota,String excessao) {
         this.id = id;
         this.caracteristica = caracteristica;
         this.sigla = sigla;
         this.nota = nota;
+        this.excessao = excessao;
     }
 
     public Long getId() {
@@ -44,5 +44,13 @@ public class FormsXgpManejoMelhoramentoComponent {
 
     public void setNota(Integer nota) {
         this.nota = nota;
+    }
+
+    public String getExcessao() {
+        return excessao;
+    }
+
+    public void setExcessao(String excessao) {
+        this.excessao = excessao;
     }
 }
