@@ -7,6 +7,7 @@ import android.content.Context;
 import android.widget.TextView;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
+import android.text.InputType;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
@@ -54,61 +55,99 @@ public class FormsXgpManejoMelhoramentoAdapter extends RecyclerView.Adapter<Form
     static class ViewHolder extends RecyclerView.ViewHolder {
         private final TextView nomeCaracteristica;
         private final TextView siglaCaracteristica;
-        private final TextInputEditText nota;
+        private final TextInputEditText notaInput;
         private final TextInputLayout layout;
-        private TextWatcher notaWatcher;
+        private TextWatcher currentTextWatcher;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             nomeCaracteristica = itemView.findViewById(R.id.nome_caracteristica);
             siglaCaracteristica = itemView.findViewById(R.id.sigla_caracteristica);
-            nota = itemView.findViewById(R.id.nota);
+            notaInput = itemView.findViewById(R.id.nota);
             layout = itemView.findViewById(R.id.notaContainer);
             layout.setHintEnabled(false);
         }
 
         public void bind(FormsXgpManejoMelhoramentoComponent component) {
-            if (notaWatcher != null) {
-                nota.removeTextChangedListener(notaWatcher);
+            if (currentTextWatcher != null) {
+                notaInput.removeTextChangedListener(currentTextWatcher);
             }
 
             nomeCaracteristica.setText(component.getCaracteristica());
             siglaCaracteristica.setText(component.getSigla());
-            nota.setText(component.getNota() != null ? String.valueOf(component.getNota()) : "");
 
-            notaWatcher = new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            if (component.isEhObservacao()) {
+                notaInput.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+                notaInput.setHint("Digite sua observação");
+                notaInput.setText(component.getObservacao() != null ? component.getObservacao() : "");
+                resetarEstilo();
+                layout.setError(null);
 
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {}
+                currentTextWatcher = new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
-                @Override
-                public void afterTextChanged(Editable s) {
-                    try {
-                        String text = s.toString().trim();
-                        if (text.isEmpty()) {
-                            component.setNota(null);
-                            resetarEstilo();
-                        } else {
-                            int notaDigitada = Integer.parseInt(text);
-                            component.setNota(notaDigitada);
-                            validarNota(notaDigitada);
-                        }
-                    } catch (NumberFormatException e) {
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                        component.setObservacao(s.toString().trim());
+                        // Limpar a nota se o campo for usado para observação
                         component.setNota(null);
-                        marcarComoInvalido();
                     }
+                };
+            } else {
+                notaInput.setInputType(InputType.TYPE_CLASS_NUMBER);
+                notaInput.setHint("Digite a nota");
+                notaInput.setText(component.getNota() != null ? String.valueOf(component.getNota()) : "");
+
+                if (component.getNota() != null) {
+                    validarNota(component.getNota(), component.getNotaInicial(), component.getNotaFinal());
+                } else {
+                    resetarEstilo();
                 }
-            };
-            nota.addTextChangedListener(notaWatcher);
+
+                currentTextWatcher = new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                        try {
+                            String text = s.toString().trim();
+                            if (text.isEmpty()) {
+                                component.setNota(null);
+                                resetarEstilo();
+                            } else {
+                                int notaDigitada = Integer.parseInt(text);
+                                component.setNota(notaDigitada);
+                                validarNota(notaDigitada, component.getNotaInicial(), component.getNotaFinal());
+                            }
+                            component.setObservacao(null);
+                        } catch (NumberFormatException e) {
+                            component.setNota(null);
+                            marcarComoInvalido("Nota inválida");
+                        }
+                    }
+                };
+            }
+            notaInput.addTextChangedListener(currentTextWatcher);
         }
 
-        private void validarNota(int nota) {
-            if (nota >= 1 && nota <= 6) {
+        private void validarNota(int nota, Integer notaInicial, Integer notaFinal) {
+            if (notaInicial == null || notaFinal == null) {
+                marcarComoInvalido("Limites de nota não definidos.");
+                return;
+            }
+
+            if (nota >= notaInicial && nota <= notaFinal) {
                 marcarComoValido();
             } else {
-                marcarComoInvalido();
+                marcarComoInvalido("Nota deve ser entre " + notaInicial + " e " + notaFinal);
             }
         }
 
@@ -118,10 +157,10 @@ public class FormsXgpManejoMelhoramentoAdapter extends RecyclerView.Adapter<Form
             layout.setError(null);
         }
 
-        private void marcarComoInvalido() {
+        private void marcarComoInvalido(String errorMessage) {
             layout.setBoxStrokeColor(ContextCompat.getColor(itemView.getContext(), R.color.colorError));
             layout.setBoxStrokeWidth(3);
-            layout.setError("Nota deve ser entre 1 e 6");
+            layout.setError(errorMessage);
         }
 
         private void resetarEstilo() {

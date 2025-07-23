@@ -92,15 +92,10 @@ public class ManejoMelhoramentoService {
     }
 
 
-    public CompletableFuture<List<Long>> saveMultipleAsync(List<ManejoMelhoramento> manejos) {
-        return CompletableFuture.supplyAsync(() -> {
+    public CompletableFuture<Void> saveMultipleAsync(List<ManejoMelhoramento> manejos) {
+        return CompletableFuture.runAsync(() -> {
             try {
-                List<Long> ids = new java.util.ArrayList<>();
-                for (ManejoMelhoramento manejo : manejos) {
-                    Long id = melhoramentoManejoDao.insert(manejo);
-                    ids.add(id);
-                }
-                return ids;
+                melhoramentoManejoDao.insertAll(manejos);
             } catch (Exception e) {
                 Log.e(TAG, "Erro ao salvar múltiplos manejos", e);
                 throw new RuntimeException("Erro ao salvar manejos", e);

@@ -18,6 +18,7 @@ public class AppDatabaseCallback extends RoomDatabase.Callback {
             try {
                 Log.d(TAG, "Iniciando inserção de dados iniciais...");
 
+                // Inserindo dados na tabela xgp_melhoramento
                 db.execSQL("INSERT INTO xgp_melhoramento (id_melhoramento, nome) VALUES " +
                         "(1, 'PMGZ'), " +
                         "(2, 'GENEPLUS'), " +
@@ -25,14 +26,31 @@ public class AppDatabaseCallback extends RoomDatabase.Callback {
                         "(4, 'GENCIS')");
                 Log.d(TAG, "Melhoramentos inseridos com sucesso");
 
+                // Inserindo dados na tabela xgp_caracteristica
                 db.execSQL("INSERT INTO xgp_caracteristica (id_caracteristica, id_melhoramento, descricao, sigla, nota_inicial, nota_final, excessao, eh_observacao) VALUES " +
                         "(1, 1, 'Conformação', 'C', 1, 6, '9', 'n'), " +
                         "(2, 1, 'Pelagem', 'P', 1, 6, '9', 'n'), " +
-                        "(3, 2, 'Musculosidade', 'M', 1, 6, '9', 'n'), " +
-                        "(4, 2, 'Umbigo', 'U', 1, 6, '9', 'n'), " +
-                        "(5, 2, 'Observacao', 'COM', 1, 6, '9', 's')");
+                        "(3, 1, 'Musculosidade', 'M', 1, 6, '9', 'n'), " +
+                        "(4, 1, 'Umbigo', 'U', 1, 6, '9', 'n'), " +
+                        "(5, 1, 'Observacao', 'COM', 1, 6, '9', 's'), " +
+                        "(6, 2, 'Conformação', 'C', 1, 6, '9', 'n'), " +
+                        "(7, 2, 'Pelagem', 'P', 1, 6, '9', 'n'), " +
+                        "(8, 2, 'Musculosidade', 'M', 1, 6, '9', 'n'), " +
+                        "(9, 2, 'Umbigo', 'U', 1, 6, '9', 'n'), " +
+                        "(10, 2, 'Observacao', 'COM', 1, 6, '9', 's'), " +
+                        "(11, 3, 'Conformação', 'C', 1, 6, '9', 'n'), " +
+                        "(12, 3, 'Pelagem', 'P', 1, 6, '9', 'n'), " +
+                        "(13, 3, 'Musculosidade', 'M', 1, 6, '9', 'n'), " +
+                        "(14, 3, 'Umbigo', 'U', 1, 6, '9', 'n'), " +
+                        "(15, 3, 'Observacao', 'COM', 1, 6, '9', 's'), " +
+                        "(16, 4, 'Conformação', 'C', 1, 6, '9', 'n'), " +
+                        "(17, 4, 'Pelagem', 'P', 1, 6, '9', 'n'), " +
+                        "(18, 4, 'Musculosidade', 'M', 1, 6, '9', 'n'), " +
+                        "(19, 4, 'Umbigo', 'U', 1, 6, '9', 'n'), " +
+                        "(20, 4, 'Observacao', 'COM', 1, 6, '9', 's')");
                 Log.d(TAG, "Características inseridas com sucesso");
 
+                // Inserindo dados na tabela xgp_observacao
                 db.execSQL("INSERT INTO xgp_observacao (id_observacao, id_melhoramento, sigla, descricao) VALUES " +
                         "(1, 1, 'C', 'Conformação'), " +
                         "(2, 2, 'P', 'Pelagem'), " +

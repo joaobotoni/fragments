@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 import android.app.AlertDialog;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -29,12 +30,16 @@ public class XgpManejoMelhoramentoFragment extends Fragment {
 
     private static final String TAG = "ManejoMelhoramentoFragment";
     private static final String ARG_ID_MELHORAMENTO = "id_melhoramento";
+
     private RecyclerView recyclerViewCaracteristicas;
     private MaterialButton botaoSalvarManejos;
+    private TextView nomeMelhoramentoTextView;
     private FormsXgpManejoMelhoramentoAdapter adapterManejos;
+
     private final ManejoMelhoramentoService manejoMelhoramentoService;
     private final List<FormsXgpManejoMelhoramentoComponent> componentesFormularioManejos = new ArrayList<>();
     private final List<Caracteristica> listaCaracteristicas = new ArrayList<>();
+
     private Long idMelhoramentoReferencia;
 
     public XgpManejoMelhoramentoFragment(ManejoMelhoramentoService service) {
@@ -59,10 +64,13 @@ public class XgpManejoMelhoramentoFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        inicializarViews(view);
+        recyclerViewCaracteristicas = view.findViewById(R.id.recyclerVieXgpManejoMelhoramento);
+        botaoSalvarManejos = view.findViewById(R.id.send);
+        nomeMelhoramentoTextView = view.findViewById(R.id.nome_melhoramento);
+
         configurarRecyclerView();
-        configurarListeners();
-        carregarCaracteristicas();
+        botaoSalvarManejos.setOnClickListener(v -> processarSalvamento());
+        carregarDadosIniciais();
     }
 
     private Long extrairIdDosArgumentos() {
@@ -71,232 +79,169 @@ public class XgpManejoMelhoramentoFragment extends Fragment {
         return id == -1L ? null : id;
     }
 
-    private void inicializarViews(View view) {
-        recyclerViewCaracteristicas = view.findViewById(R.id.recyclerVieXgpManejoMelhoramento);
-        botaoSalvarManejos = view.findViewById(R.id.send);
-    }
-
     private void configurarRecyclerView() {
         adapterManejos = new FormsXgpManejoMelhoramentoAdapter(requireContext(), componentesFormularioManejos);
         recyclerViewCaracteristicas.setLayoutManager(new LinearLayoutManager(requireContext()));
         recyclerViewCaracteristicas.setAdapter(adapterManejos);
     }
 
-    private void configurarListeners() {
-        botaoSalvarManejos.setOnClickListener(v -> processarSalvamento());
-    }
-
-    private void carregarCaracteristicas() {
-        manejoMelhoramentoService.getAllCaracteristicasAsync()
-                .thenAccept(this::processarCaracteristicasCarregadas)
-                .exceptionally(this::tratarErroCarregamento);
-    }
-
-    private void processarCaracteristicasCarregadas(List<Caracteristica> caracteristicas) {
-        executarNaThreadPrincipal(() -> {
-            atualizarListaCaracteristicas(caracteristicas);
-            criarComponentesFormulario();
-            notificarAdapterAtualizado();
-            verificarCaracteristicasVazias();
-        });
-    }
-
-    private void atualizarListaCaracteristicas(List<Caracteristica> caracteristicas) {
-        listaCaracteristicas.clear();
-        listaCaracteristicas.addAll(caracteristicas);
-    }
-
-    private void criarComponentesFormulario() {
-        componentesFormularioManejos.clear();
-        componentesFormularioManejos.addAll(
-                listaCaracteristicas.stream()
-                        .filter(this::isCaracteristicaValida)
-                        .map(this::criarComponenteFormulario)
-                        .collect(Collectors.toList())
-        );
-    }
-
-    private boolean isCaracteristicaValida(Caracteristica caracteristica) {
-        return idMelhoramentoReferencia == null || Objects.equals(caracteristica.getIdMelhoramento(), idMelhoramentoReferencia);
-    }
-
-    private FormsXgpManejoMelhoramentoComponent criarComponenteFormulario(Caracteristica caracteristica) {
-        return new FormsXgpManejoMelhoramentoComponent(
-                caracteristica.getIdCaracteristica(),
-                caracteristica.getDescricao(),
-                caracteristica.getSigla(),
-                null,
-                caracteristica.getExcessao()
-        );
-    }
-
-    private void notificarAdapterAtualizado() {
-        adapterManejos.notifyDataSetChanged();
-    }
-
-    private void verificarCaracteristicasVazias() {
-        if (componentesFormularioManejos.isEmpty()) {
-            exibirToast("Nenhuma característica encontrada.");
+    private void carregarDadosIniciais() {
+        if (idMelhoramentoReferencia != null) {
+            manejoMelhoramentoService.getMelhoramentoByIdAsync(idMelhoramentoReferencia)
+                    .thenAccept(melhoramento -> executarNaThreadPrincipal(() -> {
+                        nomeMelhoramentoTextView.setText(
+                                melhoramento != null && melhoramento.getNome() != null
+                                        ? melhoramento.getNome()
+                                        : "Melhoramento não encontrado"
+                        );
+                    }))
+                    .exceptionally(throwable -> {
+                        executarNaThreadPrincipal(() -> {
+                            nomeMelhoramentoTextView.setText("Erro ao carregar Melhoramento");
+                            exibirErro(throwable);
+                        });
+                        return null;
+                    });
+        } else {
+            nomeMelhoramentoTextView.setText("ID do Melhoramento não fornecido");
         }
-    }
 
-    private Void tratarErroCarregamento(Throwable throwable) {
-        executarNaThreadPrincipal(() -> exibirErro(throwable));
-        return null;
+        manejoMelhoramentoService.getAllCaracteristicasAsync()
+                .thenAccept(caracteristicas -> executarNaThreadPrincipal(() -> {
+                    listaCaracteristicas.clear();
+                    listaCaracteristicas.addAll(caracteristicas);
+
+                    componentesFormularioManejos.clear();
+                    componentesFormularioManejos.addAll(
+                            listaCaracteristicas.stream()
+                                    .filter(c -> idMelhoramentoReferencia == null ||
+                                            Objects.equals(c.getIdMelhoramento(), idMelhoramentoReferencia))
+                                    .map(c -> new FormsXgpManejoMelhoramentoComponent(
+                                            c.getIdCaracteristica(),
+                                            c.getDescricao(),
+                                            c.getSigla(),
+                                            null,
+                                            c.getExcessao(),
+                                            "s".equalsIgnoreCase(c.getIsObservacao()),
+                                            c.getNotaInicial(),
+                                            c.getNotaFinal()
+                                    ))
+                                    .collect(Collectors.toList())
+                    );
+
+                    adapterManejos.notifyDataSetChanged();
+
+                    if (componentesFormularioManejos.isEmpty()) {
+                        Toast.makeText(requireContext(), "Nenhuma característica encontrada.", Toast.LENGTH_LONG).show();
+                    }
+                }))
+                .exceptionally(throwable -> {
+                    executarNaThreadPrincipal(() -> exibirErro(throwable));
+                    return null;
+                });
     }
 
     private void processarSalvamento() {
-        List<FormsXgpManejoMelhoramentoComponent> componentes = obterComponentesParaSalvar();
+        List<FormsXgpManejoMelhoramentoComponent> componentes = new ArrayList<>(adapterManejos.getComponents());
 
-        if (!validarComponentesParaSalvar(componentes)) return;
-
-        if (!validarNotas(componentes)) return;
-
-        iniciarProcessoSalvamento();
-        salvarManejos(componentes);
-    }
-
-    private List<FormsXgpManejoMelhoramentoComponent> obterComponentesParaSalvar() {
-        return new ArrayList<>(adapterManejos.getComponents());
-    }
-
-    private boolean validarComponentesParaSalvar(List<FormsXgpManejoMelhoramentoComponent> componentes) {
         if (componentes.isEmpty()) {
-            exibirToast("Nenhum campo foi preenchido para salvar.");
-            return false;
+            Toast.makeText(requireContext(), "Nenhum campo foi preenchido para salvar.", Toast.LENGTH_LONG).show();
+            return;
         }
-        return true;
+
+        if (!validarNotasEObservacoes(componentes)) {
+            return;
+        }
+
+        botaoSalvarManejos.setEnabled(false);
+        botaoSalvarManejos.setText("Salvando...");
+
+        List<ManejoMelhoramento> manejos = componentes.stream()
+                .map(c -> {
+                    Long idCaracteristica = c.getId();
+                    Long idMelhoramento = listaCaracteristicas.stream()
+                            .filter(car -> Objects.equals(car.getIdCaracteristica(), idCaracteristica))
+                            .map(Caracteristica::getIdMelhoramento)
+                            .findFirst()
+                            .orElse(idMelhoramentoReferencia != null ? idMelhoramentoReferencia : 1L);
+
+                    return new ManejoMelhoramento(
+                            System.currentTimeMillis() + idCaracteristica,
+                            idMelhoramento,
+                            idCaracteristica,
+                            c.isEhObservacao() ? null : c.getNota(),
+                            c.getExcessao(),
+                            c.isEhObservacao() ? c.getObservacao() : null
+                    );
+                })
+                .collect(Collectors.toList());
+
+        manejoMelhoramentoService.saveMultipleAsync(manejos)
+                .thenAccept(result -> executarNaThreadPrincipal(() -> {
+                    botaoSalvarManejos.setEnabled(true);
+                    botaoSalvarManejos.setText("SALVAR");
+                    Toast.makeText(requireContext(),
+                            "Dados salvos com sucesso! (" + manejos.size() + " itens)",
+                            Toast.LENGTH_LONG).show();
+                }))
+                .exceptionally(throwable -> {
+                    executarNaThreadPrincipal(() -> {
+                        botaoSalvarManejos.setEnabled(true);
+                        botaoSalvarManejos.setText("SALVAR");
+                        exibirErro(throwable);
+                    });
+                    return null;
+                });
     }
 
-    private boolean validarNotas(List<FormsXgpManejoMelhoramentoComponent> componentes) {
-        for (FormsXgpManejoMelhoramentoComponent componente : componentes) {
-            Caracteristica caracteristica = encontrarCaracteristicaPorId(componente.getId());
-            if (caracteristica != null && !validarNotaNoFormulario(componente.getNota(), caracteristica)) {
+    private boolean validarNotasEObservacoes(List<FormsXgpManejoMelhoramentoComponent> componentes) {
+        for (FormsXgpManejoMelhoramentoComponent c : componentes) {
+            Caracteristica caracteristica = listaCaracteristicas.stream()
+                    .filter(car -> Objects.equals(car.getIdCaracteristica(), c.getId()))
+                    .findFirst()
+                    .orElse(null);
+
+            if (caracteristica == null) {
+                exibirErro(new Throwable("Característica não encontrada para o componente: " + c.getCaracteristica()));
                 return false;
+            }
+
+            if (c.isEhObservacao()) {
+                if (c.getNota() != null) {
+                    exibirErro(new Throwable("Campo de observação não deve ter nota numérica: " + c.getCaracteristica()));
+                    return false;
+                }
+            } else {
+                if (c.getNota() == null) {
+                    exibirErro(new Throwable("Nota não pode ser vazia para: " + c.getCaracteristica()));
+                    return false;
+                }
+                if (c.getObservacao() != null && !c.getObservacao().isEmpty()) {
+                    exibirErro(new Throwable("Campo de nota não deve ter observação: " + c.getCaracteristica()));
+                    return false;
+                }
+                if (caracteristica.getNotaInicial() != null && caracteristica.getNotaFinal() != null &&
+                        (c.getNota() < caracteristica.getNotaInicial() || c.getNota() > caracteristica.getNotaFinal())) {
+                    exibirErro(new Throwable("Nota para '" + caracteristica.getDescricao() + "' deve estar entre " +
+                            caracteristica.getNotaInicial() + " e " + caracteristica.getNotaFinal()));
+                    return false;
+                }
             }
         }
         return true;
     }
 
-    private Caracteristica encontrarCaracteristicaPorId(Long idCaracteristica) {
-        return listaCaracteristicas.stream()
-                .filter(c -> Objects.equals(c.getIdCaracteristica(), idCaracteristica))
-                .findFirst()
-                .orElse(null);
-    }
-
-    private boolean validarNotaNoFormulario(Integer nota, Caracteristica caracteristica) {
-        if (nota == null || caracteristica == null) {
-            exibirErro(new Throwable("Erro inesperado na hora de salvar as notas"));
-            return false;
-        }
-
-        Integer notaInicial = caracteristica.getNotaInicial();
-        Integer notaFinal = caracteristica.getNotaFinal();
-
-        if (nota < notaInicial || nota > notaFinal) {
-            exibirErro(new Throwable("A nota precisa estar entre " + notaInicial + " e " + notaFinal));
-            return false;
-        }
-        return true;
-    }
-
-    private void iniciarProcessoSalvamento() {
-        alterarEstadoBotaoSalvar(false, "Salvando...");
-    }
-
-    private void salvarManejos(List<FormsXgpManejoMelhoramentoComponent> componentes) {
-        List<ManejoMelhoramento> manejos = criarManejosParaSalvar(componentes);
-
-        manejoMelhoramentoService.saveMultipleAsync(manejos)
-                .thenAccept(this::processarSalvamentoSucesso)
-                .exceptionally(this::processarErroSalvamento);
-    }
-
-    private List<ManejoMelhoramento> criarManejosParaSalvar(List<FormsXgpManejoMelhoramentoComponent> componentes) {
-        return componentes.stream()
-                .map(this::criarManejoMelhoramento)
-                .collect(Collectors.toList());
-    }
-
-    private ManejoMelhoramento criarManejoMelhoramento(FormsXgpManejoMelhoramentoComponent componente) {
-        Long idCaracteristica = componente.getId();
-        Long idMelhoramento = obterIdMelhoramentoPorCaracteristica(idCaracteristica);
-
-        return new ManejoMelhoramento(
-                gerarIdUnico(idCaracteristica),
-                idMelhoramento,
-                idCaracteristica,
-                componente.getNota(),
-                componente.getExcessao(),
-                null
-        );
-    }
-
-    private Long obterIdMelhoramentoPorCaracteristica(Long idCaracteristica) {
-        return listaCaracteristicas.stream()
-                .filter(caracteristica -> Objects.equals(caracteristica.getIdCaracteristica(), idCaracteristica))
-                .map(Caracteristica::getIdMelhoramento)
-                .findFirst()
-                .orElse(obterIdMelhoramentoPadrao());
-    }
-
-    private Long obterIdMelhoramentoPadrao() {
-        return idMelhoramentoReferencia != null ? idMelhoramentoReferencia : 1L;
-    }
-
-    private Long gerarIdUnico(Long idCaracteristica) {
-        return System.currentTimeMillis() + idCaracteristica;
-    }
-
-    private void processarSalvamentoSucesso(List<Long> idsSalvos) {
-        executarNaThreadPrincipal(() -> {
-            finalizarProcessoSalvamento();
-            exibirMensagemSucesso(idsSalvos.size());
-        });
-    }
-
-    private Void processarErroSalvamento(Throwable throwable) {
-        executarNaThreadPrincipal(() -> {
-            finalizarProcessoSalvamento();
-            exibirErro(throwable);
-        });
-        return null;
-    }
-
-    private void finalizarProcessoSalvamento() {
-        alterarEstadoBotaoSalvar(true, "Salvar Manejos");
-    }
-
-    private void exibirMensagemSucesso(int quantidadeItens) {
-        exibirToast("Dados salvos com sucesso! (" + quantidadeItens + " itens)");
-    }
-
-    private void alterarEstadoBotaoSalvar(boolean habilitado, String texto) {
-        botaoSalvarManejos.setEnabled(habilitado);
-        botaoSalvarManejos.setText(texto);
-    }
-
-    private void exibirToast(String mensagem) {
-        Toast.makeText(requireContext(), mensagem, Toast.LENGTH_LONG).show();
-    }
-
     private void exibirErro(Throwable throwable) {
-        String mensagemErro = extrairMensagemErro(throwable);
-        Log.e(TAG, "Erro: " + mensagemErro, throwable);
+        String msg = throwable.getCause() != null && throwable.getCause().getMessage() != null ?
+                throwable.getCause().getMessage() :
+                throwable.getMessage() != null ? throwable.getMessage() : "Erro inesperado";
 
+        Log.e(TAG, "Erro: " + msg, throwable);
         new AlertDialog.Builder(requireContext())
                 .setTitle("Erro")
-                .setMessage(mensagemErro)
+                .setMessage(msg)
                 .setPositiveButton("OK", null)
                 .show();
-    }
-
-    private String extrairMensagemErro(Throwable throwable) {
-        if (throwable.getCause() != null && throwable.getCause().getMessage() != null) {
-            return throwable.getCause().getMessage();
-        }
-        return throwable.getMessage() != null ? throwable.getMessage() : "Erro inesperado";
     }
 
     private void executarNaThreadPrincipal(Runnable acao) {

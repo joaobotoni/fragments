@@ -6,12 +6,21 @@ public class FormsXgpManejoMelhoramentoComponent {
     private String sigla;
     private Integer nota;
     private String excessao;
-    public FormsXgpManejoMelhoramentoComponent(Long id, String caracteristica, String sigla, Integer nota,String excessao) {
+    private String Observacao;
+    private boolean ehObservacao;
+    private Integer notaInicial;
+    private Integer notaFinal;
+
+
+    public FormsXgpManejoMelhoramentoComponent(Long id, String caracteristica, String sigla, Integer nota, String excessao, boolean ehObservacao, Integer notaInicial, Integer notaFinal) {
         this.id = id;
         this.caracteristica = caracteristica;
         this.sigla = sigla;
         this.nota = nota;
         this.excessao = excessao;
+        this.ehObservacao = ehObservacao;
+        this.notaInicial = notaInicial;
+        this.notaFinal = notaFinal;
     }
 
     public Long getId() {
@@ -52,5 +61,37 @@ public class FormsXgpManejoMelhoramentoComponent {
 
     public void setExcessao(String excessao) {
         this.excessao = excessao;
+    }
+
+    public String getObservacao() {
+        return Observacao;
+    }
+
+    public void setObservacao(String observacao) {
+        Observacao = observacao;
+    }
+
+    public boolean isEhObservacao() {
+        return ehObservacao;
+    }
+
+    public void setEhObservacao(boolean ehObservacao) {
+        this.ehObservacao = ehObservacao;
+    }
+
+    public Integer getNotaInicial() {
+        return notaInicial;
+    }
+
+    public void setNotaInicial(Integer notaInicial) {
+        this.notaInicial = notaInicial;
+    }
+
+    public Integer getNotaFinal() {
+        return notaFinal;
+    }
+
+    public void setNotaFinal(Integer notaFinal) {
+        this.notaFinal = notaFinal;
     }
 }
