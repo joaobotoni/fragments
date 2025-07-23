@@ -50,7 +50,6 @@ public class AppDatabaseCallback extends RoomDatabase.Callback {
                         "(20, 4, 'Observacao', 'COM', 1, 6, '9', 's')");
                 Log.d(TAG, "Características inseridas com sucesso");
 
-                // Inserindo dados na tabela xgp_observacao
                 db.execSQL("INSERT INTO xgp_observacao (id_observacao, id_melhoramento, sigla, descricao) VALUES " +
                         "(1, 1, 'C', 'Conformação'), " +
                         "(2, 2, 'P', 'Pelagem'), " +

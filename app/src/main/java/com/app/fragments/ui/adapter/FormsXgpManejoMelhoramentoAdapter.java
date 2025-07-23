@@ -93,7 +93,6 @@ public class FormsXgpManejoMelhoramentoAdapter extends RecyclerView.Adapter<Form
                     @Override
                     public void afterTextChanged(Editable s) {
                         component.setObservacao(s.toString().trim());
-                        // Limpar a nota se o campo for usado para observação
                         component.setNota(null);
                     }
                 };
