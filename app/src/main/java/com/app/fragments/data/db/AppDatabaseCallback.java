@@ -20,41 +20,48 @@ public class AppDatabaseCallback extends RoomDatabase.Callback {
 
                 // Inserindo dados na tabela xgp_melhoramento
                 db.execSQL("INSERT INTO xgp_melhoramento (id_melhoramento, nome) VALUES " +
-                        "(1, 'PMGZ'), " +
-                        "(2, 'GENEPLUS'), " +
-                        "(3, 'QUALITAS'), " +
-                        "(4, 'GENCIS')");
+                        "(1, 'PMGZ - DESMAME'), " +
+                        "(2, 'GENEPLUS - SOBREANO')");
+
                 Log.d(TAG, "Melhoramentos inseridos com sucesso");
 
                 // Inserindo dados na tabela xgp_caracteristica
-                db.execSQL("INSERT INTO xgp_caracteristica (id_caracteristica, id_melhoramento, descricao, sigla, nota_inicial, nota_final, excessao, eh_observacao) VALUES " +
-                        "(1, 1, 'Conformação', 'C', 1, 6, '9', 'n'), " +
-                        "(2, 1, 'Pelagem', 'P', 1, 6, '9', 'n'), " +
-                        "(3, 1, 'Musculosidade', 'M', 1, 6, '9', 'n'), " +
-                        "(4, 1, 'Umbigo', 'U', 1, 6, '9', 'n'), " +
-                        "(5, 1, 'Observacao', 'COM', 1, 6, '9', 's'), " +
-                        "(6, 2, 'Conformação', 'C', 1, 6, '9', 'n'), " +
-                        "(7, 2, 'Pelagem', 'P', 1, 6, '9', 'n'), " +
-                        "(8, 2, 'Musculosidade', 'M', 1, 6, '9', 'n'), " +
-                        "(9, 2, 'Umbigo', 'U', 1, 6, '9', 'n'), " +
-                        "(10, 2, 'Observacao', 'COM', 1, 6, '9', 's'), " +
-                        "(11, 3, 'Conformação', 'C', 1, 6, '9', 'n'), " +
-                        "(12, 3, 'Pelagem', 'P', 1, 6, '9', 'n'), " +
-                        "(13, 3, 'Musculosidade', 'M', 1, 6, '9', 'n'), " +
-                        "(14, 3, 'Umbigo', 'U', 1, 6, '9', 'n'), " +
-                        "(15, 3, 'Observacao', 'COM', 1, 6, '9', 's'), " +
-                        "(16, 4, 'Conformação', 'C', 1, 6, '9', 'n'), " +
-                        "(17, 4, 'Pelagem', 'P', 1, 6, '9', 'n'), " +
-                        "(18, 4, 'Musculosidade', 'M', 1, 6, '9', 'n'), " +
-                        "(19, 4, 'Umbigo', 'U', 1, 6, '9', 'n'), " +
-                        "(20, 4, 'Observacao', 'COM', 1, 6, '9', 's')");
+                db.execSQL("INSERT INTO xgp_caracteristica " +
+                        "(id_caracteristica, id_melhoramento, descricao, sigla, nota_inicial, nota_final, excessao, eh_observacao) VALUES " +
+                        "(1, 1, 'CONFORMAÇÃO', 'C', 1, 5, 'excessao', 'n'), " +
+                        "(2, 1, 'PRECOCIDADE', 'P', 1, 5, 'excessao', 'n'), " +
+                        "(3, 1, 'MUSCULATURA', 'M', 1, 5, 'excessao', 'n'), " +
+                        "(4, 1, 'UMBIGO', 'U', 1, 5, 'excessao', 'n'), " +
+                        "(5, 1, 'OBSERVAÇÃO', 'COM', 1, 5, 'excessao', 's'), " +
+                        "(6, 2, 'CONFORMAÇÃO', 'C', 1, 5, 'excessao', 'n'), " +
+                        "(7, 2, 'PRECOCIDADE', 'P', 1, 5, 'excessao', 'n'), " +
+                        "(8, 2, 'MUSCULATURA', 'M', 1, 5, 'excessao', 'n'), " +
+                        "(9, 2, 'UMBIGO', 'U', 1, 5, '9', 'excessao'), " +
+                        "(10, 2, 'ALTURA DE GARUPA', 'ALT', 1, 6, 'excessao', 'n'), " +
+                        "(11, 2, 'PERÍMETRO ESCROTAL', 'PE', 1, 6, 'excessao', 'n'), " +
+                        "(12, 2, 'CARACTERIZAÇÃO RACIAL', 'R', 1, 5, 'excessao', 'n'), " +
+                        "(13, 2, 'OSSATURA', 'OSS', 1, 3, 'excessao', 'n'), " +
+                        "(14, 2, 'PIGMENTAÇÃO', 'PIG', 1, 3, 'excessao', 'n'), " +
+                        "(15, 2, 'PRESENÇA', 'CH', 1, 6, 'excessao', 'n'), " +
+                        "(16, 2, 'TEMPERAMENTO', 'TEMP', 1, 5, 'excessao', 'n'), " +
+                        "(17, 2, 'OBSERVAÇÃO', 'COM', 1, 6, 'excessao', 's')");
+
                 Log.d(TAG, "Características inseridas com sucesso");
 
+                // Inserindo dados na tabela xgp_observacao
                 db.execSQL("INSERT INTO xgp_observacao (id_observacao, id_melhoramento, sigla, descricao) VALUES " +
-                        "(1, 1, 'C', 'Conformação'), " +
-                        "(2, 2, 'P', 'Pelagem'), " +
-                        "(3, 3, 'M', 'Musculosidade'), " +
-                        "(4, 4, 'U', 'Umbigo')");
+                        "(1, 1, 'ODE', 'DESPIGMENTACAO'), " +
+                        "(2, 2, 'OLO', 'LOMBO'), " +
+                        "(3, 2, 'OMA', 'MANDIBULA BOCA'), " +
+                        "(4, 2, 'ORA', 'RACIAL'), " +
+                        "(5, 2, 'OCU', 'CUPIM'), " +
+                        "(6, 2, 'OCH', 'CHANFRO DESVIOS AFUNDAMENTOS'), " +
+                        "(7, 2, 'OAP', 'APRUMOS'), " +
+                        "(8, 2, 'OSF', 'OSSATURA FRACA'), " +
+                        "(9, 2, 'OSS', 'OSSO SACRO SALIENTE'), " +
+                        "(10, 2, 'OPR', 'PREPUCIO OU UMBIGO'), " +
+                        "(11, 2, 'OTE', 'TEMPERAMENTO')");
+
                 Log.d(TAG, "Observações inseridas com sucesso");
 
                 Log.d(TAG, "Todos os dados iniciais foram inseridos com sucesso!");

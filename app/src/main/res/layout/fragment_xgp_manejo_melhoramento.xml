@@ -30,7 +30,7 @@
         app:layout_constraintBottom_toTopOf="@id/send"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        tools:listitem="@layout/recycler_view_xgp_manejo_melhoramento_form" />
+        tools:listitem="@layout/recycler_view_xgp_manejo_melhoramento" />
 
 
     <com.google.android.material.button.MaterialButton

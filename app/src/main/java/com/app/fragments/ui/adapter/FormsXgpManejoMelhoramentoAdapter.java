@@ -33,7 +33,7 @@ public class FormsXgpManejoMelhoramentoAdapter extends RecyclerView.Adapter<Form
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.recycler_view_xgp_manejo_melhoramento_form, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.recycler_view_xgp_manejo_melhoramento, parent, false);
         return new ViewHolder(view);
     }
 
@@ -55,7 +55,7 @@ public class FormsXgpManejoMelhoramentoAdapter extends RecyclerView.Adapter<Form
     static class ViewHolder extends RecyclerView.ViewHolder {
         private final TextView nomeCaracteristica;
         private final TextView siglaCaracteristica;
-        private final TextInputEditText notaInput;
+        private final TextInputEditText valorInput;
         private final TextInputLayout layout;
         private TextWatcher currentTextWatcher;
 
@@ -63,23 +63,23 @@ public class FormsXgpManejoMelhoramentoAdapter extends RecyclerView.Adapter<Form
             super(itemView);
             nomeCaracteristica = itemView.findViewById(R.id.nome_caracteristica);
             siglaCaracteristica = itemView.findViewById(R.id.sigla_caracteristica);
-            notaInput = itemView.findViewById(R.id.nota);
-            layout = itemView.findViewById(R.id.notaContainer);
+            valorInput = itemView.findViewById(R.id.valor);
+            layout = itemView.findViewById(R.id.container);
             layout.setHintEnabled(false);
         }
 
         public void bind(FormsXgpManejoMelhoramentoComponent component) {
             if (currentTextWatcher != null) {
-                notaInput.removeTextChangedListener(currentTextWatcher);
+                valorInput.removeTextChangedListener(currentTextWatcher);
             }
 
             nomeCaracteristica.setText(component.getCaracteristica());
             siglaCaracteristica.setText(component.getSigla());
 
             if (component.isEhObservacao()) {
-                notaInput.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
-                notaInput.setHint("Digite sua observação");
-                notaInput.setText(component.getObservacao() != null ? component.getObservacao() : "");
+                valorInput.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+                valorInput.setHint("Digite sua observação");
+                valorInput.setText(component.getValorDigitado() != null ? component.getValorDigitado() : ""); // Usa valorDigitado
                 resetarEstilo();
                 layout.setError(null);
 
@@ -92,17 +92,21 @@ public class FormsXgpManejoMelhoramentoAdapter extends RecyclerView.Adapter<Form
 
                     @Override
                     public void afterTextChanged(Editable s) {
-                        component.setObservacao(s.toString().trim());
-                        component.setNota(null);
+                        component.setValorDigitado(s.toString().trim());
                     }
                 };
             } else {
-                notaInput.setInputType(InputType.TYPE_CLASS_NUMBER);
-                notaInput.setHint("Digite a nota");
-                notaInput.setText(component.getNota() != null ? String.valueOf(component.getNota()) : "");
+                valorInput.setInputType(InputType.TYPE_CLASS_NUMBER);
+                valorInput.setHint("Digite a nota");
+                valorInput.setText(component.getValorDigitado() != null ? component.getValorDigitado() : ""); // Usa valorDigitado
 
-                if (component.getNota() != null) {
-                    validarNota(component.getNota(), component.getNotaInicial(), component.getNotaFinal());
+                if (component.getValorDigitado() != null && !component.getValorDigitado().isEmpty()) {
+                    try {
+                        int nota = Integer.parseInt(component.getValorDigitado());
+                        validarNota(nota, component.getNotaInicial(), component.getNotaFinal());
+                    } catch (NumberFormatException e) {
+                        marcarComoInvalido("Nota inválida");
+                    }
                 } else {
                     resetarEstilo();
                 }
@@ -116,25 +120,23 @@ public class FormsXgpManejoMelhoramentoAdapter extends RecyclerView.Adapter<Form
 
                     @Override
                     public void afterTextChanged(Editable s) {
-                        try {
-                            String text = s.toString().trim();
-                            if (text.isEmpty()) {
-                                component.setNota(null);
-                                resetarEstilo();
-                            } else {
+                        String text = s.toString().trim();
+                        component.setValorDigitado(text);
+
+                        if (text.isEmpty()) {
+                            resetarEstilo();
+                        } else {
+                            try {
                                 int notaDigitada = Integer.parseInt(text);
-                                component.setNota(notaDigitada);
                                 validarNota(notaDigitada, component.getNotaInicial(), component.getNotaFinal());
+                            } catch (NumberFormatException e) {
+                                marcarComoInvalido("Nota inválida");
                             }
-                            component.setObservacao(null);
-                        } catch (NumberFormatException e) {
-                            component.setNota(null);
-                            marcarComoInvalido("Nota inválida");
                         }
                     }
                 };
             }
-            notaInput.addTextChangedListener(currentTextWatcher);
+            valorInput.addTextChangedListener(currentTextWatcher);
         }
 
         private void validarNota(int nota, Integer notaInicial, Integer notaFinal) {

@@ -4,19 +4,18 @@ public class FormsXgpManejoMelhoramentoComponent {
     private Long id;
     private String caracteristica;
     private String sigla;
-    private Integer nota;
+    private String valorDigitado;
     private String excessao;
-    private String Observacao;
     private boolean ehObservacao;
     private Integer notaInicial;
     private Integer notaFinal;
 
 
-    public FormsXgpManejoMelhoramentoComponent(Long id, String caracteristica, String sigla, Integer nota, String excessao, boolean ehObservacao, Integer notaInicial, Integer notaFinal) {
+    public FormsXgpManejoMelhoramentoComponent(Long id, String caracteristica, String sigla, String valorDigitado, String excessao, boolean ehObservacao, Integer notaInicial, Integer notaFinal) {
         this.id = id;
         this.caracteristica = caracteristica;
         this.sigla = sigla;
-        this.nota = nota;
+        this.valorDigitado = valorDigitado;
         this.excessao = excessao;
         this.ehObservacao = ehObservacao;
         this.notaInicial = notaInicial;
@@ -47,12 +46,12 @@ public class FormsXgpManejoMelhoramentoComponent {
         this.sigla = sigla;
     }
 
-    public Integer getNota() {
-        return nota;
+    public String getValorDigitado() {
+        return valorDigitado;
     }
 
-    public void setNota(Integer nota) {
-        this.nota = nota;
+    public void setValorDigitado(String valorDigitado) {
+        this.valorDigitado = valorDigitado;
     }
 
     public String getExcessao() {
@@ -61,14 +60,6 @@ public class FormsXgpManejoMelhoramentoComponent {
 
     public void setExcessao(String excessao) {
         this.excessao = excessao;
-    }
-
-    public String getObservacao() {
-        return Observacao;
-    }
-
-    public void setObservacao(String observacao) {
-        Observacao = observacao;
     }
 
     public boolean isEhObservacao() {

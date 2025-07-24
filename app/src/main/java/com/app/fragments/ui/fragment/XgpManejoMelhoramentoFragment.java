@@ -105,7 +105,7 @@ public class XgpManejoMelhoramentoFragment extends Fragment {
     }
 
     private void carregarNomeMelhoramento() {
-        if (idMelhoramentoReferencia == null) {
+        if (idMelhoramentoReferencia == null || idMelhoramentoReferencia == -1L) {
             nomeMelhoramentoTextView.setText("ID do Melhoramento não fornecido");
             return;
         }
@@ -159,13 +159,13 @@ public class XgpManejoMelhoramentoFragment extends Fragment {
         componentesFormularioManejos.addAll(
                 listaCaracteristicas.stream()
                         .filter(caracteristica ->
-                                idMelhoramentoReferencia == null ||
+                                idMelhoramentoReferencia == null || idMelhoramentoReferencia == -1L ||
                                         Objects.equals(caracteristica.getIdMelhoramento(), idMelhoramentoReferencia))
                         .map(caracteristica -> new FormsXgpManejoMelhoramentoComponent(
                                 caracteristica.getIdCaracteristica(),
                                 caracteristica.getDescricao(),
                                 caracteristica.getSigla(),
-                                null, // Permitir que o usuário digite a nota
+                                null, 
                                 caracteristica.getExcessao(),
                                 caracteristica.getIsObservacao().equalsIgnoreCase("s"),
                                 caracteristica.getNotaInicial(),
@@ -216,7 +216,7 @@ public class XgpManejoMelhoramentoFragment extends Fragment {
             Caracteristica caracteristica = encontrarCaracteristica(componente.getId());
 
             if (caracteristica == null) {
-                exibirErro("Característica não encontrada: " + componente.getCaracteristica());
+                exibirErro("Erro interno: Característica não encontrada para ID " + componente.getId());
                 return false;
             }
 
@@ -225,7 +225,7 @@ public class XgpManejoMelhoramentoFragment extends Fragment {
                     return false;
                 }
             } else {
-                if (!validarNota(componente, caracteristica)) {
+                if (!validarValor(componente, caracteristica)) {
                     return false;
                 }
             }
@@ -234,41 +234,53 @@ public class XgpManejoMelhoramentoFragment extends Fragment {
     }
 
     private boolean validarObservacao(FormsXgpManejoMelhoramentoComponent componente) {
-        if (componente.getNota() != null) {
-            exibirErro("Campo de observação não deve ter nota: " + componente.getCaracteristica());
-            return false;
+        String observacaoDigitada = componente.getValorDigitado();
+
+        if (observacaoDigitada == null || observacaoDigitada.trim().isEmpty()) {
+            return true;
         }
 
-
-        if (componente.getObservacao() != null && !componente.getObservacao().trim().isEmpty()) {
-            if (!observacoesValidas.contains(componente.getObservacao().trim().toLowerCase())) {
-                exibirErro("Observação inválida: " + componente.getObservacao());
-                return false;
+        String[] palavras = observacaoDigitada.trim().toLowerCase().split("\\s+");
+        boolean observacaoEncontrada = false;
+        for (String palavra : palavras) {
+            if (observacoesValidas.contains(palavra)) {
+                observacaoEncontrada = true;
+                break;
             }
+        }
+
+        if (!observacaoEncontrada) {
+            exibirErro("Observação inválida para '" + componente.getCaracteristica() + "'. Por favor, use termos válidos.");
+            return false;
         }
 
         return true;
     }
 
-    private boolean validarNota(FormsXgpManejoMelhoramentoComponent componente, Caracteristica caracteristica) {
-        if (componente.getNota() == null) {
-            exibirErro("Nota não pode estar vazia: " + componente.getCaracteristica());
+    private boolean validarValor(FormsXgpManejoMelhoramentoComponent componente, Caracteristica caracteristica) {
+        String valorDigitado = componente.getValorDigitado();
+
+        if (valorDigitado == null || valorDigitado.trim().isEmpty()) {
+            exibirErro("A nota para '" + componente.getCaracteristica() + "' não pode estar vazia.");
+            return false;
+        }
+        Integer valor = null;
+        try {
+            valor = Integer.parseInt(valorDigitado);
+        } catch (NumberFormatException e) {
+            exibirErro("A nota para '" + componente.getCaracteristica() + "' deve ser um número inteiro válido.");
             return false;
         }
 
-        if (componente.getObservacao() != null && !componente.getObservacao().isEmpty()) {
-            exibirErro("Campo de nota não deve ter observação: " + componente.getCaracteristica());
-            return false;
+        if (caracteristica.getNotaInicial() != null && caracteristica.getNotaFinal() != null) {
+            if (valor < caracteristica.getNotaInicial() || valor > caracteristica.getNotaFinal()) {
+                exibirErro("A nota para '" + componente.getCaracteristica() + "' deve estar entre " +
+                        caracteristica.getNotaInicial() + " e " + caracteristica.getNotaFinal() + ".");
+                return false;
+            }
+        } else {
+            Log.w(TAG, "Limites de nota não definidos para a característica: " + caracteristica.getDescricao());
         }
-
-        if (caracteristica.getNotaInicial() != null && caracteristica.getNotaFinal() != null &&
-                (componente.getNota() < caracteristica.getNotaInicial() ||
-                        componente.getNota() > caracteristica.getNotaFinal())) {
-            exibirErro("Nota para " + componente.getCaracteristica() + " deve estar entre " +
-                    caracteristica.getNotaInicial() + " e " + caracteristica.getNotaFinal());
-            return false;
-        }
-
         return true;
     }
 
@@ -283,14 +295,13 @@ public class XgpManejoMelhoramentoFragment extends Fragment {
         return componentes.stream()
                 .map(c -> {
                     Long idMelhoramento = encontrarIdMelhoramento(c.getId());
-
                     return new ManejoMelhoramento(
                             System.currentTimeMillis() + c.getId(),
                             idMelhoramento,
                             c.getId(),
-                            c.isEhObservacao() ? null : c.getNota(),
+                            c.getValorDigitado(),
                             c.getExcessao(),
-                            c.isEhObservacao() ? c.getObservacao() : null
+                            c.isEhObservacao() ? c.getValorDigitado() : null
                     );
                 })
                 .collect(Collectors.toList());

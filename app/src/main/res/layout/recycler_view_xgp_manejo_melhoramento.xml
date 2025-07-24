@@ -57,7 +57,7 @@
             tools:ignore="HardcodedText" />
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/notaContainer"
+            android:id="@+id/container"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
@@ -70,7 +70,7 @@
             tools:ignore="HardcodedText">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/nota"
+                android:id="@+id/valor"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Digite a nota"
