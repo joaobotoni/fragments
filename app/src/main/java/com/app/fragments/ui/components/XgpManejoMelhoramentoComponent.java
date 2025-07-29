@@ -9,8 +9,9 @@ public class XgpManejoMelhoramentoComponent {
     private String excessao;
     private Integer notaInicial;
     private Integer notaFinal;
+    private String ehObservacao;
 
-    public XgpManejoMelhoramentoComponent(Long id, String caracteristica, String sigla, String tipo, String valorDigitado, String excessao, Integer notaInicial, Integer notaFinal) {
+    public XgpManejoMelhoramentoComponent(Long id, String caracteristica, String sigla, String tipo, String valorDigitado, String excessao, Integer notaInicial, Integer notaFinal, String ehObservacao) {
         this.id = id;
         this.caracteristica = caracteristica;
         this.sigla = sigla;
@@ -19,6 +20,7 @@ public class XgpManejoMelhoramentoComponent {
         this.excessao = excessao;
         this.notaInicial = notaInicial;
         this.notaFinal = notaFinal;
+        this.ehObservacao = ehObservacao;
     }
 
     public Long getId() {
@@ -83,5 +85,13 @@ public class XgpManejoMelhoramentoComponent {
 
     public void setNotaFinal(Integer notaFinal) {
         this.notaFinal = notaFinal;
+    }
+
+    public String getEhObservacao() {
+        return ehObservacao;
+    }
+
+    public void setEhObservacao(String ehObservacao) {
+        this.ehObservacao = ehObservacao;
     }
 }

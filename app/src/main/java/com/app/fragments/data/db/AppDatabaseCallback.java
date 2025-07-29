@@ -27,24 +27,24 @@ public class AppDatabaseCallback extends RoomDatabase.Callback {
 
                 // Inserindo dados na tabela xgp_caracteristica
                 db.execSQL("INSERT INTO xgp_caracteristica " +
-                        "(id_caracteristica, id_melhoramento, descricao, sigla, tipo_dado, nota_inicial, nota_final, excessao) VALUES " +
-                        "(1, 1, 'CONFORMAÇÃO', 'C', 'I', 1, 5, 'excessao'), " +
-                        "(2, 1, 'PRECOCIDADE', 'P', 'I', 1, 5, 'excessao'), " +
-                        "(3, 1, 'MUSCULATURA', 'M', 'I',1, 5, 'excessao'), " +
-                        "(4, 1, 'UMBIGO', 'U', 'I', 1, 5, 'excessao'), " +
-                        "(5, 1, 'OBSERVAÇÃO', 'COM', 'T',1, 5, 'excessao'), " +
-                        "(6, 2, 'CONFORMAÇÃO', 'C','I', 1, 5, 'excessao'), " +
-                        "(7, 2, 'PRECOCIDADE', 'P','I', 1, 5, 'excessao'), " +
-                        "(8, 2, 'MUSCULATURA', 'M','I', 1, 5, 'excessao'), " +
-                        "(9, 2, 'UMBIGO', 'U','I', 1, 5, 'excessao'), " +
-                        "(10, 2, 'ALTURA DE GARUPA', 'ALT','D', 1, 6, 'excessao'), " +
-                        "(11, 2, 'PERÍMETRO ESCROTAL', 'PE','D', 1, 6, 'excessao'), " +
-                        "(12, 2, 'CARACTERIZAÇÃO RACIAL', 'R','I', 1, 5, 'excessao'), " +
-                        "(13, 2, 'OSSATURA', 'OSS','I' ,1, 3, 'excessao'), " +
-                        "(14, 2, 'PIGMENTAÇÃO', 'PIG','I', 1, 3, 'excessao'), " +
-                        "(15, 2, 'PRESENÇA', 'CH', 'T',1, 6, 'excessao'), " +
-                        "(16, 2, 'TEMPERAMENTO', 'TEMP','I', 1, 5, 'excessao'), " +
-                        "(17, 2, 'OBSERVAÇÃO', 'COM','T' ,1, 6, 'excessao')");
+                        "(id_caracteristica, id_melhoramento, descricao, sigla, tipo_dado, nota_inicial, nota_final, excessao, eh_observacao) VALUES " +
+                        "(1, 1, 'CONFORMAÇÃO', 'C', 'I', 1, 5, 'excessao', 'n'), " +
+                        "(2, 1, 'PRECOCIDADE', 'P', 'I', 1, 5, 'excessao', 'n'), " +
+                        "(3, 1, 'MUSCULATURA', 'M', 'I',1, 5, 'excessao', 'n'), " +
+                        "(4, 1, 'UMBIGO', 'U', 'I', 1, 5, 'excessao', 'n'), " +
+                        "(5, 1, 'OBSERVAÇÃO', 'COM', 'T',1, 5, 'excessao', 's'), " +
+                        "(6, 2, 'CONFORMAÇÃO', 'C','I', 1, 5, 'excessao', 'n'), " +
+                        "(7, 2, 'PRECOCIDADE', 'P','I', 1, 5, 'excessao', 'n'), " +
+                        "(8, 2, 'MUSCULATURA', 'M','I', 1, 5, 'excessao','n'), " +
+                        "(9, 2, 'UMBIGO', 'U','I', 1, 5, 'excessao', 'n'), " +
+                        "(10, 2, 'ALTURA DE GARUPA', 'ALT','D', 1, 6, 'excessao', 'n'), " +
+                        "(11, 2, 'PERÍMETRO ESCROTAL', 'PE','D', 1, 6, 'excessao', 'n'), " +
+                        "(12, 2, 'CARACTERIZAÇÃO RACIAL', 'R','I', 1, 5, 'excessao','n'), " +
+                        "(13, 2, 'OSSATURA', 'OSS','I' ,1, 3, 'excessao', 'n'), " +
+                        "(14, 2, 'PIGMENTAÇÃO', 'PIG','I', 1, 3, 'excessao', 'n'), " +
+                        "(15, 2, 'PRESENÇA', 'CH', 'T',1, 6, 'excessao','n'), " +
+                        "(16, 2, 'TEMPERAMENTO', 'TEMP','I', 1, 5, 'excessao', 'n'), " +
+                        "(17, 2, 'OBSERVAÇÃO', 'COM','T' ,1, 6, 'excessao', 's')");
 
                 Log.d(TAG, "Características inseridas com sucesso");
 

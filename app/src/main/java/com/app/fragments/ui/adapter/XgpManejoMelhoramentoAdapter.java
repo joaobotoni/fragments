@@ -24,10 +24,20 @@ public class XgpManejoMelhoramentoAdapter extends RecyclerView.Adapter<XgpManejo
 
     private final Context context;
     private final List<XgpManejoMelhoramentoComponent> components;
+    private ObservationValidator observationValidator;
 
     public XgpManejoMelhoramentoAdapter(Context context, List<XgpManejoMelhoramentoComponent> components) {
         this.context = context;
         this.components = components;
+    }
+
+    /**
+     * Define o validador de observações
+     */
+    public void setObservationValidator(ObservationValidator validator) {
+        this.observationValidator = validator;
+        // Notifica o adapter para re-validar todos os itens
+        notifyDataSetChanged();
     }
 
     @NonNull
@@ -47,7 +57,14 @@ public class XgpManejoMelhoramentoAdapter extends RecyclerView.Adapter<XgpManejo
         return components.size();
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder {
+    /**
+     * Interface para validação de observações
+     */
+    public interface ObservationValidator {
+        boolean isValidObservation(String value);
+    }
+
+    class ViewHolder extends RecyclerView.ViewHolder {
 
         private final TextView txtName;
         private final TextView txtAbbreviation;
@@ -99,45 +116,72 @@ public class XgpManejoMelhoramentoAdapter extends RecyclerView.Adapter<XgpManejo
         }
 
         private void setupInputByType(XgpManejoMelhoramentoComponent component) {
-            String type = component.getTipo();
-            char typeChar = getTypeChar(type);
+            if (isObservationComponent(component)) {
+                configureObservationInput(component);
+            } else {
+                String type = component.getTipo();
+                char typeChar = getTypeChar(type);
 
-            switch (typeChar) {
-                case 'D':
-                    configureDoubleInput(component);
-                    break;
-                case 'I':
-                    configureIntegerInput(component);
-                    break;
-                case 'T':
-                default:
-                    configureTextInput(component);
-                    break;
+                switch (typeChar) {
+                    case 'D':
+                        configureDoubleInput(component);
+                        break;
+                    case 'I':
+                        configureIntegerInput(component);
+                        break;
+                    case 'T':
+                    default:
+                        configureTextInput(component);
+                        break;
+                }
             }
+        }
+
+        /**
+         * Verifica se o componente é uma observação
+         */
+        private boolean isObservationComponent(XgpManejoMelhoramentoComponent component) {
+            return "S".equalsIgnoreCase(component.getEhObservacao());
         }
 
         private char getTypeChar(String type) {
             return (type != null && !type.isEmpty()) ? type.toUpperCase().charAt(0) : 'T';
         }
 
+        /**
+         * Configura input para observações
+         */
+        private void configureObservationInput(XgpManejoMelhoramentoComponent component) {
+            setInputTypeAndHint(InputType.TYPE_CLASS_TEXT, "Digite a observação");
+            addObservationValidationWatcher(component);
+        }
+
         private void configureDoubleInput(XgpManejoMelhoramentoComponent component) {
-            setInputTypeAndHint( InputType.TYPE_NUMBER_FLAG_DECIMAL, "Enter decimal value");
+            setInputTypeAndHint(InputType.TYPE_NUMBER_FLAG_DECIMAL, "Digite valor decimal");
             addDoubleValidationWatcher(component);
         }
 
         private void configureIntegerInput(XgpManejoMelhoramentoComponent component) {
-            setInputTypeAndHint(InputType.TYPE_CLASS_NUMBER, "Enter score");
+            setInputTypeAndHint(InputType.TYPE_CLASS_NUMBER, "Digite nota");
             addIntegerValidationWatcher(component);
         }
 
         private void configureTextInput(XgpManejoMelhoramentoComponent component) {
-            setInputTypeAndHint(InputType.TYPE_CLASS_TEXT, "Enter value");
+            setInputTypeAndHint(InputType.TYPE_CLASS_TEXT, "Digite valor");
             addTextWatcher(component);
         }
 
         private void setInputTypeAndHint(int inputType, String hint) {
             inputValue.setInputType(inputType);
             inputContainer.setHint(hint);
+        }
+
+        /**
+         * Adiciona validação específica para observações
+         */
+        private void addObservationValidationWatcher(XgpManejoMelhoramentoComponent component) {
+            currentWatcher = createTextWatcher(component, this::validateObservationInput);
+            inputValue.addTextChangedListener(currentWatcher);
         }
 
         private void addDoubleValidationWatcher(XgpManejoMelhoramentoComponent component) {
@@ -172,13 +216,34 @@ public class XgpManejoMelhoramentoAdapter extends RecyclerView.Adapter<XgpManejo
             };
         }
 
+        /**
+         * Valida entrada de observação
+         */
+        private void validateObservationInput(XgpManejoMelhoramentoComponent component, String value) {
+            if (isEmptyValue(value)) {
+                resetInputStyle();
+                return;
+            }
+
+            if (observationValidator != null) {
+                if (observationValidator.isValidObservation(value)) {
+                    showValid();
+                } else {
+                    showError("Observação inválida. Verifique se contém uma descrição válida.");
+                }
+            } else {
+                resetInputStyle();
+            }
+        }
+
         private void validateDoubleInput(XgpManejoMelhoramentoComponent component, String value) {
             if (isEmptyValue(value)) return;
 
             try {
                 double numericValue = Double.parseDouble(value);
+                showValid();
             } catch (NumberFormatException e) {
-                showError("Only decimal numbers are allowed");
+                showError("Apenas números decimais são permitidos");
             }
         }
 
@@ -189,7 +254,7 @@ public class XgpManejoMelhoramentoAdapter extends RecyclerView.Adapter<XgpManejo
                 int numericValue = Integer.parseInt(value);
                 validateRange(numericValue, component.getNotaInicial(), component.getNotaFinal());
             } catch (NumberFormatException e) {
-                showError("Only integer numbers are allowed");
+                showError("Apenas números inteiros são permitidos");
             }
         }
 
@@ -201,11 +266,16 @@ public class XgpManejoMelhoramentoAdapter extends RecyclerView.Adapter<XgpManejo
             return false;
         }
 
-        private void validateRange(double value, int min, int max) {
+        private void validateRange(double value, Integer min, Integer max) {
+            if (min == null || max == null) {
+                showValid();
+                return;
+            }
+
             if (value >= min && value <= max) {
                 showValid();
             } else {
-                showError(String.format("Must be between %d and %d", min, max));
+                showError(String.format("Deve estar entre %s e %s", min, max));
             }
         }
 

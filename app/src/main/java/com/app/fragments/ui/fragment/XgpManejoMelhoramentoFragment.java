@@ -2,23 +2,25 @@ package com.app.fragments.ui.fragment;
 
 import android.os.Bundle;
 import android.view.View;
-import android.widget.TextView;
 import android.app.AlertDialog;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.app.fragments.R;
 import com.app.fragments.data.entities.*;
 import com.app.fragments.service.ManejoMelhoramentoService;
 import com.app.fragments.ui.adapter.XgpManejoMelhoramentoAdapter;
 import com.app.fragments.ui.components.XgpManejoMelhoramentoComponent;
 import com.google.android.material.button.MaterialButton;
+
 import java.util.List;
 import java.util.ArrayList;
-import java.util.stream.Collectors;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 public class XgpManejoMelhoramentoFragment extends Fragment {
 
@@ -47,7 +49,6 @@ public class XgpManejoMelhoramentoFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         initializeFragment(view);
         loadData();
     }
@@ -71,7 +72,6 @@ public class XgpManejoMelhoramentoFragment extends Fragment {
     private void setupRecyclerView() {
         recyclerView = requireView().findViewById(R.id.recyclerViewXgpManejoMelhoramento);
         adapter = new XgpManejoMelhoramentoAdapter(requireContext(), components);
-
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         recyclerView.setAdapter(adapter);
     }
@@ -81,7 +81,6 @@ public class XgpManejoMelhoramentoFragment extends Fragment {
             showError("ID de melhoramento inválido");
             return;
         }
-
         loadCharacteristics()
                 .thenCompose(this::processCharacteristics)
                 .thenRun(this::onDataLoaded)
@@ -94,10 +93,10 @@ public class XgpManejoMelhoramentoFragment extends Fragment {
 
     private CompletableFuture<List<Caracteristica>> loadCharacteristics() {
         return service.getAllCaracteristicasAsync()
-                .thenApply(this::filterByMelhoramentoId);
+                .thenApply(this::filterCharacteristicsByMelhoramentoId);
     }
 
-    private List<Caracteristica> filterByMelhoramentoId(List<Caracteristica> characteristics) {
+    private List<Caracteristica> filterCharacteristicsByMelhoramentoId(List<Caracteristica> characteristics) {
         return characteristics.stream()
                 .filter(c -> melhoramentoId.equals(c.getIdMelhoramento()))
                 .collect(Collectors.toList());
@@ -125,7 +124,8 @@ public class XgpManejoMelhoramentoFragment extends Fragment {
                 null,
                 c.getExcessao(),
                 c.getNotaInicial(),
-                c.getNotaFinal()
+                c.getNotaFinal(),
+                c.getEhObservacao()
         );
     }
 
@@ -149,35 +149,84 @@ public class XgpManejoMelhoramentoFragment extends Fragment {
 
     private void handleEmptyData() {
         if (components.isEmpty()) {
-            showInfo("Nenhum dado encontrado para este melhoramento");
+            showInfo("Nenhuma característica encontrada para este melhoramento.");
         }
     }
 
     private void handleSaveClick() {
-        if (hasValidationErrors()) return;
-        saveData();
-    }
-
-    private boolean hasValidationErrors() {
-        if (hasEmptyFields()) {
-            showError("Preencha todos os campos antes de salvar");
-            return true;
+        if (!isAnyFieldFilled()) {
+            showError("Preencha pelo menos um campo antes de salvar.");
+            return;
         }
-        return false;
+
+        validateAllFilledComponentsAsync()
+                .thenAccept(this::handleValidationResult)
+                .exceptionally(this::handleSaveError);
     }
 
-    private boolean hasEmptyFields() {
-        return components.stream()
-                .anyMatch(c -> isEmptyValue(c.getValorDigitado()));
+    private boolean isAnyFieldFilled() {
+        return components.stream().anyMatch(c -> !isEmptyValue(c.getValorDigitado()));
+    }
+
+    private void handleValidationResult(boolean allValid) {
+        if (allValid) {
+            saveData();
+        }
     }
 
     private boolean isEmptyValue(String value) {
         return value == null || value.trim().isEmpty();
     }
 
+    private CompletableFuture<Boolean> validateAllFilledComponentsAsync() {
+        List<CompletableFuture<Boolean>> validationFutures = components.stream()
+                .filter(c -> !isEmptyValue(c.getValorDigitado()))
+                .map(this::validateComponentAsync)
+                .collect(Collectors.toList());
+
+        return CompletableFuture.allOf(validationFutures.toArray(new CompletableFuture[0]))
+                .thenApply(v -> validationFutures.stream().allMatch(CompletableFuture::join));
+    }
+
+    private CompletableFuture<Boolean> validateComponentAsync(XgpManejoMelhoramentoComponent component) {
+        if (!isObservationField(component)) {
+            return CompletableFuture.completedFuture(true);
+        }
+
+        return findMatchingObservations(component.getValorDigitado())
+                .thenApply(matchingObservations -> {
+                    if (matchingObservations.isEmpty()) {
+                        showError("Valor '" + component.getValorDigitado() + "' para '" + component.getCaracteristica() + "' não contém uma observação válida.");
+                        return false;
+                    }
+                    return true;
+                });
+    }
+
+    private boolean isObservationField(XgpManejoMelhoramentoComponent component) {
+        return "s".equalsIgnoreCase(component.getEhObservacao());
+    }
+
+    private CompletableFuture<List<Observacao>> findMatchingObservations(String value) {
+        return service.getAllObservacoesAsync()
+                .thenApply(this::filterObservationsByMelhoramentoId)
+                .thenApply(observations -> observations.stream()
+                        .filter(o -> containsObservation(value, o.getSigla()))
+                        .collect(Collectors.toList()));
+    }
+
+    private List<Observacao> filterObservationsByMelhoramentoId(List<Observacao> observations) {
+        return observations.stream()
+                .filter(o -> melhoramentoId.equals(o.getIdMelhoramento()))
+                .collect(Collectors.toList());
+    }
+
+    private boolean containsObservation(String value, String sigla) {
+        return sigla != null && value != null && value.toLowerCase().contains(sigla.toLowerCase());
+    }
+
     private void saveData() {
         List<ManejoMelhoramento> dataToSave = prepareDataForSave();
-
         service.saveMultipleAsync(dataToSave)
                 .thenRun(this::onSaveSuccess)
                 .exceptionally(this::handleSaveError);
@@ -196,21 +245,21 @@ public class XgpManejoMelhoramentoFragment extends Fragment {
                 component.getId(),
                 component.getValorDigitado(),
                 component.getExcessao(),
-                null
+                isObservationField(component) ? component.getValorDigitado() : null
         );
     }
 
     private void onSaveSuccess() {
-        showSuccess("Dados salvos com sucesso!");
+        runOnUiThread(() -> showSuccess("Dados salvos com sucesso!"));
     }
 
     private Void handleLoadError(Throwable error) {
-        showError("Erro ao carregar dados: " + error.getMessage());
+        runOnUiThread(() -> showError("Erro ao carregar dados: " + error.getMessage()));
         return null;
     }
 
     private Void handleSaveError(Throwable error) {
-        showError("Erro ao salvar: " + error.getMessage());
+        runOnUiThread(() -> showError("Erro ao salvar: " + error.getMessage()));
         return null;
     }
 
@@ -227,16 +276,18 @@ public class XgpManejoMelhoramentoFragment extends Fragment {
     }
 
     private void showDialog(String title, String message) {
-        runOnUiThread(() ->
-                new AlertDialog.Builder(requireContext())
-                        .setTitle(title)
-                        .setMessage(message)
-                        .setPositiveButton("OK", null)
-                        .show()
-        );
+        if (isAdded() && getContext() != null) {
+            runOnUiThread(() -> new AlertDialog.Builder(requireContext())
+                    .setTitle(title)
+                    .setMessage(message)
+                    .setPositiveButton("OK", null)
+                    .show());
+        }
     }
 
     private void runOnUiThread(Runnable action) {
-        requireActivity().runOnUiThread(action);
+        if (getActivity() != null) {
+            getActivity().runOnUiThread(action);
+        }
     }
 }

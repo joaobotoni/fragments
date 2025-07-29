@@ -40,11 +40,14 @@ public class Caracteristica {
     @ColumnInfo(name = "excessao")
     private String excessao;
 
+    @ColumnInfo(name = "eh_observacao")
+    private String ehObservacao;
+
 
     public Caracteristica() {
     }
 
-    public Caracteristica(@NonNull Long idMelhoramento, @NonNull Long idCaracteristica, String descricao, String sigla, String tipoDado, Integer notaInicial, Integer notaFinal, String excessao) {
+    public Caracteristica(@NonNull Long idMelhoramento, @NonNull Long idCaracteristica, String descricao, String sigla, String tipoDado, Integer notaInicial, Integer notaFinal, String excessao, String ehObservacao) {
         this.idMelhoramento = idMelhoramento;
         this.idCaracteristica = idCaracteristica;
         this.descricao = descricao;
@@ -53,6 +56,7 @@ public class Caracteristica {
         this.notaInicial = notaInicial;
         this.notaFinal = notaFinal;
         this.excessao = excessao;
+        this.ehObservacao = ehObservacao;
     }
 
     @NonNull
@@ -119,5 +123,13 @@ public class Caracteristica {
 
     public void setExcessao(String excessao) {
         this.excessao = excessao;
+    }
+
+    public String getEhObservacao() {
+        return ehObservacao;
+    }
+
+    public void setEhObservacao(String ehObservacao) {
+        this.ehObservacao = ehObservacao;
     }
 }
