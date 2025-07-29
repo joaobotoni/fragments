@@ -28,6 +28,9 @@ public class Caracteristica {
     @ColumnInfo(name = "sigla")
     private String sigla;
 
+    @ColumnInfo(name = "tipo_dado")
+    private String tipoDado;
+
     @ColumnInfo(name = "nota_inicial")
     private Integer notaInicial;
 
@@ -37,21 +40,19 @@ public class Caracteristica {
     @ColumnInfo(name = "excessao")
     private String excessao;
 
-    @ColumnInfo(name = "eh_observacao")
-    private String isObservacao;
 
     public Caracteristica() {
     }
 
-    public Caracteristica(@NonNull Long idMelhoramento, @NonNull Long idCaracteristica, String descricao, String sigla, Integer notaInicial, Integer notaFinal, String excessao, String isObservacao) {
+    public Caracteristica(@NonNull Long idMelhoramento, @NonNull Long idCaracteristica, String descricao, String sigla, String tipoDado, Integer notaInicial, Integer notaFinal, String excessao) {
         this.idMelhoramento = idMelhoramento;
         this.idCaracteristica = idCaracteristica;
         this.descricao = descricao;
         this.sigla = sigla;
+        this.tipoDado = tipoDado;
         this.notaInicial = notaInicial;
         this.notaFinal = notaFinal;
         this.excessao = excessao;
-        this.isObservacao = isObservacao;
     }
 
     @NonNull
@@ -88,6 +89,14 @@ public class Caracteristica {
         this.sigla = sigla;
     }
 
+    public String getTipoDado() {
+        return tipoDado;
+    }
+
+    public void setTipoDado(String tipoDado) {
+        this.tipoDado = tipoDado;
+    }
+
     public Integer getNotaInicial() {
         return notaInicial;
     }
@@ -110,13 +119,5 @@ public class Caracteristica {
 
     public void setExcessao(String excessao) {
         this.excessao = excessao;
-    }
-
-    public String getIsObservacao() {
-        return isObservacao;
-    }
-
-    public void setIsObservacao(String isObservacao) {
-        this.isObservacao = isObservacao;
     }
 }

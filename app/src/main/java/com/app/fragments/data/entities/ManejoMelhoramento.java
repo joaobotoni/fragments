@@ -33,7 +33,7 @@ import java.io.Serializable;
 public class ManejoMelhoramento implements Serializable {
 
     @NonNull
-    @PrimaryKey(autoGenerate = false)
+    @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id_manejo_melhoramento")
     private Long idManejoMelhoramento;
 
@@ -44,7 +44,7 @@ public class ManejoMelhoramento implements Serializable {
     @ColumnInfo(name = "id_caracteristica")
     private Long idCaracteristica;
 
-    @ColumnInfo(name = "nota")
+    @ColumnInfo(name = "valor")
     private String value;
 
     @ColumnInfo(name = "excessao")
@@ -56,8 +56,7 @@ public class ManejoMelhoramento implements Serializable {
     public ManejoMelhoramento() {
     }
 
-    public ManejoMelhoramento(@NonNull Long idManejoMelhoramento, @NonNull Long idMelhoramento, Long idCaracteristica, String value, String excessao, String observacao) {
-        this.idManejoMelhoramento = idManejoMelhoramento;
+    public ManejoMelhoramento(@NonNull Long idMelhoramento, Long idCaracteristica, String value, String excessao, String observacao) {
         this.idMelhoramento = idMelhoramento;
         this.idCaracteristica = idCaracteristica;
         this.value = value;
@@ -102,6 +101,4 @@ public class ManejoMelhoramento implements Serializable {
     }
 
     public void setObservacao(String observacao) { this.observacao = observacao; }
-
-
 }
