@@ -20,43 +20,43 @@ public class Caracteristica {
 
     @ColumnInfo(name = "id_caracteristica")
     @NonNull
-    private Long idCaracteristica;
+    private Long idCharacteristic;
 
     @ColumnInfo(name = "descricao")
-    private String descricao;
+    private String description;
 
     @ColumnInfo(name = "sigla")
     private String sigla;
 
+    @ColumnInfo(name = "lista_opcoes")
+    private String listOptions;
+
     @ColumnInfo(name = "tipo_dado")
-    private String tipoDado;
+    private String type;
 
     @ColumnInfo(name = "nota_inicial")
-    private Integer notaInicial;
+    private Double initialValue;
 
     @ColumnInfo(name = "nota_final")
-    private Integer notaFinal;
-
-    @ColumnInfo(name = "excessao")
-    private String excessao;
+    private Double finalValue;
 
     @ColumnInfo(name = "eh_observacao")
-    private String ehObservacao;
+    private String isObservation;
 
 
     public Caracteristica() {
     }
 
-    public Caracteristica(@NonNull Long idMelhoramento, @NonNull Long idCaracteristica, String descricao, String sigla, String tipoDado, Integer notaInicial, Integer notaFinal, String excessao, String ehObservacao) {
+    public Caracteristica(@NonNull Long idMelhoramento, @NonNull Long idCharacteristic, String description, String sigla, String listOptions, String type, Double initialValue, Double finalValue, String isObservation) {
         this.idMelhoramento = idMelhoramento;
-        this.idCaracteristica = idCaracteristica;
-        this.descricao = descricao;
+        this.idCharacteristic = idCharacteristic;
+        this.description = description;
         this.sigla = sigla;
-        this.tipoDado = tipoDado;
-        this.notaInicial = notaInicial;
-        this.notaFinal = notaFinal;
-        this.excessao = excessao;
-        this.ehObservacao = ehObservacao;
+        this.listOptions = listOptions;
+        this.type = type;
+        this.initialValue = initialValue;
+        this.finalValue = finalValue;
+        this.isObservation = isObservation;
     }
 
     @NonNull
@@ -69,20 +69,20 @@ public class Caracteristica {
     }
 
     @NonNull
-    public Long getIdCaracteristica() {
-        return idCaracteristica;
+    public Long getIdCharacteristic() {
+        return idCharacteristic;
     }
 
-    public void setIdCaracteristica(@NonNull Long idCaracteristica) {
-        this.idCaracteristica = idCaracteristica;
+    public void setIdCharacteristic(@NonNull Long idCharacteristic) {
+        this.idCharacteristic = idCharacteristic;
     }
 
-    public String getDescricao() {
-        return descricao;
+    public String getDescription() {
+        return description;
     }
 
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getSigla() {
@@ -93,43 +93,43 @@ public class Caracteristica {
         this.sigla = sigla;
     }
 
-    public String getTipoDado() {
-        return tipoDado;
+    public String getListOptions() {
+        return listOptions;
     }
 
-    public void setTipoDado(String tipoDado) {
-        this.tipoDado = tipoDado;
+    public void setListOptions(String listOptions) {
+        this.listOptions = listOptions;
     }
 
-    public Integer getNotaInicial() {
-        return notaInicial;
+    public String getType() {
+        return type;
     }
 
-    public void setNotaInicial(Integer notaInicial) {
-        this.notaInicial = notaInicial;
+    public void setType(String type) {
+        this.type = type;
     }
 
-    public Integer getNotaFinal() {
-        return notaFinal;
+    public Double getInitialValue() {
+        return initialValue;
     }
 
-    public void setNotaFinal(Integer notaFinal) {
-        this.notaFinal = notaFinal;
+    public void setInitialValue(Double initialValue) {
+        this.initialValue = initialValue;
     }
 
-    public String getExcessao() {
-        return excessao;
+    public Double getFinalValue() {
+        return finalValue;
     }
 
-    public void setExcessao(String excessao) {
-        this.excessao = excessao;
+    public void setFinalValue(Double finalValue) {
+        this.finalValue = finalValue;
     }
 
-    public String getEhObservacao() {
-        return ehObservacao;
+    public String getIsObservation() {
+        return isObservation;
     }
 
-    public void setEhObservacao(String ehObservacao) {
-        this.ehObservacao = ehObservacao;
+    public void setIsObservation(String isObservation) {
+        this.isObservation = isObservation;
     }
 }

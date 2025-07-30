@@ -1,42 +1,45 @@
 package com.app.fragments.ui.components;
 
+import java.util.Optional;
+import java.util.function.Function;
+
 public class XgpManejoMelhoramentoComponent {
-    private Long id;
-    private String caracteristica;
+    private Long idCharacteristic;
+    private String characteristic;
     private String sigla;
-    private String tipo;
-    private String valorDigitado;
-    private String excessao;
-    private Integer notaInicial;
-    private Integer notaFinal;
-    private String ehObservacao;
+    private String type;
+    private String value;
+    private Optional<String> listOptions;
+    private Optional<Number> initialValue;
+    private Optional<Number> finalValue;
+    private String isObservation;
 
-    public XgpManejoMelhoramentoComponent(Long id, String caracteristica, String sigla, String tipo, String valorDigitado, String excessao, Integer notaInicial, Integer notaFinal, String ehObservacao) {
-        this.id = id;
-        this.caracteristica = caracteristica;
+    public XgpManejoMelhoramentoComponent(Long idCharacteristic, String characteristic, String sigla, String type, String value, Optional<String> listOptions, Optional<Number> initialValue, Optional<Number> finalValue, String isObservation) {
+        this.idCharacteristic = idCharacteristic;
+        this.characteristic = characteristic;
         this.sigla = sigla;
-        this.tipo = tipo;
-        this.valorDigitado = valorDigitado;
-        this.excessao = excessao;
-        this.notaInicial = notaInicial;
-        this.notaFinal = notaFinal;
-        this.ehObservacao = ehObservacao;
+        this.type = type;
+        this.value = value;
+        this.listOptions = listOptions;
+        this.initialValue = initialValue;
+        this.finalValue = finalValue;
+        this.isObservation = isObservation;
     }
 
-    public Long getId() {
-        return id;
+    public Long getIdCharacteristic() {
+        return idCharacteristic;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setIdCharacteristic(Long idCharacteristic) {
+        this.idCharacteristic = idCharacteristic;
     }
 
-    public String getCaracteristica() {
-        return caracteristica;
+    public String getCharacteristic() {
+        return characteristic;
     }
 
-    public void setCaracteristica(String caracteristica) {
-        this.caracteristica = caracteristica;
+    public void setCharacteristic(String characteristic) {
+        this.characteristic = characteristic;
     }
 
     public String getSigla() {
@@ -47,51 +50,57 @@ public class XgpManejoMelhoramentoComponent {
         this.sigla = sigla;
     }
 
-    public String getTipo() {
-        return tipo;
+    public String getType() {
+        return type;
     }
 
-    public void setTipo(String tipo) {
-        this.tipo = tipo;
+    public void setType(String type) {
+        this.type = type;
     }
 
-    public String getValorDigitado() {
-        return valorDigitado;
+    public String getValue() {
+        return value;
     }
 
-    public void setValorDigitado(String valorDigitado) {
-        this.valorDigitado = valorDigitado;
+    public void setValue(String value) {
+        this.value = value;
     }
 
-    public String getExcessao() {
-        return excessao;
+    public Optional<String> getListOptions() {
+        return listOptions;
     }
 
-    public void setExcessao(String excessao) {
-        this.excessao = excessao;
+    public void setListOptions(Optional<String> listOptions) {
+        this.listOptions = listOptions;
     }
 
-    public Integer getNotaInicial() {
-        return notaInicial;
+    public Optional<Number> getInitialValue() {
+        return initialValue;
     }
 
-    public void setNotaInicial(Integer notaInicial) {
-        this.notaInicial = notaInicial;
+    public void setInitialValue(Optional<Number> initialValue) {
+        this.initialValue = initialValue;
     }
 
-    public Integer getNotaFinal() {
-        return notaFinal;
+    public Optional<Number> getFinalValue() {
+        return finalValue;
     }
 
-    public void setNotaFinal(Integer notaFinal) {
-        this.notaFinal = notaFinal;
+    public void setFinalValue(Optional<Number> finalValue) {
+        this.finalValue = finalValue;
     }
 
-    public String getEhObservacao() {
-        return ehObservacao;
+    public String getIsObservation() {
+        return isObservation;
     }
 
-    public void setEhObservacao(String ehObservacao) {
-        this.ehObservacao = ehObservacao;
+    public void setIsObservation(String isObservation) {
+        this.isObservation = isObservation;
+    }
+
+    public <T> T[] mapOptions(Function<String[], T[]> converter) {
+        return this.listOptions
+                .map(options -> converter.apply(options.split(",")))
+                .orElseGet(() -> converter.apply(new String[0]));
     }
 }

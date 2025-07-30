@@ -18,7 +18,11 @@ import com.app.fragments.ui.components.XgpManejoMelhoramentoComponent;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
+import java.util.Arrays;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 public class XgpManejoMelhoramentoAdapter extends RecyclerView.Adapter<XgpManejoMelhoramentoAdapter.ViewHolder> {
 
@@ -31,12 +35,8 @@ public class XgpManejoMelhoramentoAdapter extends RecyclerView.Adapter<XgpManejo
         this.components = components;
     }
 
-    /**
-     * Define o validador de observações
-     */
     public void setObservationValidator(ObservationValidator validator) {
         this.observationValidator = validator;
-        // Notifica o adapter para re-validar todos os itens
         notifyDataSetChanged();
     }
 
@@ -57,43 +57,37 @@ public class XgpManejoMelhoramentoAdapter extends RecyclerView.Adapter<XgpManejo
         return components.size();
     }
 
-    /**
-     * Interface para validação de observações
-     */
     public interface ObservationValidator {
         boolean isValidObservation(String value);
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
 
-        private final TextView txtName;
-        private final TextView txtAbbreviation;
+        private final TextView Name;
+        private final TextView Abbreviation;
         private final TextInputEditText inputValue;
         private final TextInputLayout inputContainer;
         private final Context context;
 
-        private XgpManejoMelhoramentoComponent currentComponent;
         private TextWatcher currentWatcher;
 
         ViewHolder(@NonNull View itemView) {
             super(itemView);
             context = itemView.getContext();
-            txtName = itemView.findViewById(R.id.nome_caracteristica);
-            txtAbbreviation = itemView.findViewById(R.id.sigla_caracteristica);
+            Name = itemView.findViewById(R.id.nome_caracteristica);
+            Abbreviation = itemView.findViewById(R.id.sigla_caracteristica);
             inputValue = itemView.findViewById(R.id.valor);
             inputContainer = itemView.findViewById(R.id.container);
         }
 
         void bind(XgpManejoMelhoramentoComponent component) {
-            currentComponent = component;
-
             setComponentTexts(component);
             configureInput(component);
         }
 
         private void setComponentTexts(XgpManejoMelhoramentoComponent component) {
-            txtName.setText(component.getCaracteristica());
-            txtAbbreviation.setText(component.getSigla());
+            Name.setText(component.getCharacteristic());
+            Abbreviation.setText(component.getSigla());
         }
 
         private void configureInput(XgpManejoMelhoramentoComponent component) {
@@ -111,15 +105,17 @@ public class XgpManejoMelhoramentoAdapter extends RecyclerView.Adapter<XgpManejo
         }
 
         private void setInputValue(XgpManejoMelhoramentoComponent component) {
-            String value = component.getValorDigitado();
-            inputValue.setText(value != null ? value : "");
+            String value = component.getValue();
+            inputValue.setText(Optional.ofNullable(value).orElse(""));
         }
 
         private void setupInputByType(XgpManejoMelhoramentoComponent component) {
             if (isObservationComponent(component)) {
                 configureObservationInput(component);
+            } else if (isExistsParameterizationOptions(component)) {
+                configureParameterizedInput(component);
             } else {
-                String type = component.getTipo();
+                String type = component.getType();
                 char typeChar = getTypeChar(type);
 
                 switch (typeChar) {
@@ -137,23 +133,44 @@ public class XgpManejoMelhoramentoAdapter extends RecyclerView.Adapter<XgpManejo
             }
         }
 
-        /**
-         * Verifica se o componente é uma observação
-         */
         private boolean isObservationComponent(XgpManejoMelhoramentoComponent component) {
-            return "S".equalsIgnoreCase(component.getEhObservacao());
+            return "S".equalsIgnoreCase(component.getIsObservation());
+        }
+
+        private boolean isExistsParameterizationOptions(XgpManejoMelhoramentoComponent component) {
+            return component.getListOptions().isPresent();
+        }
+
+        private Integer[] parameterizationOptionsInteger(XgpManejoMelhoramentoComponent component) {
+            return component.getListOptions()
+                    .map(options -> Arrays.stream(options.split(","))
+                            .map(Integer::parseInt)
+                            .toArray(Integer[]::new))
+                    .orElse(new Integer[0]);
+        }
+
+        private String[] parameterizationOptionsString(XgpManejoMelhoramentoComponent component) {
+            return component.getListOptions()
+                    .map(options -> Arrays.stream(options.split(","))
+                            .toArray(String[]::new))
+                    .orElse(new String[0]);
         }
 
         private char getTypeChar(String type) {
-            return (type != null && !type.isEmpty()) ? type.toUpperCase().charAt(0) : 'T';
+            return Optional.ofNullable(type)
+                    .filter(s -> !s.isEmpty())
+                    .map(s -> s.toUpperCase().charAt(0))
+                    .orElse('T');
         }
 
-        /**
-         * Configura input para observações
-         */
         private void configureObservationInput(XgpManejoMelhoramentoComponent component) {
             setInputTypeAndHint(InputType.TYPE_CLASS_TEXT, "Digite a observação");
             addObservationValidationWatcher(component);
+        }
+
+        private void configureParameterizedInput(XgpManejoMelhoramentoComponent component) {
+            setInputTypeAndHint(InputType.TYPE_CLASS_TEXT, "Digite valor");
+            addParameterizedValidationWatcher(component);
         }
 
         private void configureDoubleInput(XgpManejoMelhoramentoComponent component) {
@@ -176,11 +193,13 @@ public class XgpManejoMelhoramentoAdapter extends RecyclerView.Adapter<XgpManejo
             inputContainer.setHint(hint);
         }
 
-        /**
-         * Adiciona validação específica para observações
-         */
         private void addObservationValidationWatcher(XgpManejoMelhoramentoComponent component) {
             currentWatcher = createTextWatcher(component, this::validateObservationInput);
+            inputValue.addTextChangedListener(currentWatcher);
+        }
+
+        private void addParameterizedValidationWatcher(XgpManejoMelhoramentoComponent component) {
+            currentWatcher = createTextWatcher(component, this::validateParameterizedInput);
             inputValue.addTextChangedListener(currentWatcher);
         }
 
@@ -202,23 +221,22 @@ public class XgpManejoMelhoramentoAdapter extends RecyclerView.Adapter<XgpManejo
         private TextWatcher createTextWatcher(XgpManejoMelhoramentoComponent component, ValidationCallback callback) {
             return new TextWatcher() {
                 @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                }
 
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
                     String value = s.toString();
-                    component.setValorDigitado(value);
+                    component.setValue(value);
                     callback.validate(component, value);
                 }
 
                 @Override
-                public void afterTextChanged(Editable s) {}
+                public void afterTextChanged(Editable s) {
+                }
             };
         }
 
-        /**
-         * Valida entrada de observação
-         */
         private void validateObservationInput(XgpManejoMelhoramentoComponent component, String value) {
             if (isEmptyValue(value)) {
                 resetInputStyle();
@@ -236,25 +254,63 @@ public class XgpManejoMelhoramentoAdapter extends RecyclerView.Adapter<XgpManejo
             }
         }
 
-        private void validateDoubleInput(XgpManejoMelhoramentoComponent component, String value) {
+        private void validateParameterizedInput(XgpManejoMelhoramentoComponent component, String value) {
             if (isEmptyValue(value)) return;
+
+            Set<String> validOptions = new LinkedHashSet<>();
+            try {
+                if (getTypeChar(component.getType()) == 'I') {
+                    Integer[] numbers = parameterizationOptionsInteger(component);
+                    for (Integer number : numbers) {
+                        validOptions.add(String.valueOf(number));
+                    }
+                } else {
+                    String[] values = parameterizationOptionsString(component);
+                    validOptions.addAll(Arrays.asList(values));
+                }
+            } catch (NumberFormatException e) {
+                showError("Formato inválido para opções parametrizadas.");
+                return;
+            } catch (Exception e) {
+                showError("Erro ao carregar valores parametrizados.");
+                return;
+            }
+
+            if (validOptions.contains(value)) {
+                showValid();
+            } else {
+                String options = String.join(" ou ", validOptions);
+                showError(String.format("Valor inválido. Opções permitidas: %s", options.toUpperCase()));
+            }
+        }
+
+        private void validateDoubleInput(XgpManejoMelhoramentoComponent component, String value) {
+            if (isEmptyValue(value)) {
+                return;
+            }
 
             try {
                 double numericValue = Double.parseDouble(value);
-                showValid();
+                Double min = component.getInitialValue().map(Number::doubleValue).orElse(null);
+                Double max = component.getFinalValue().map(Number::doubleValue).orElse(null);
+                validateRange(numericValue, min, max);
             } catch (NumberFormatException e) {
-                showError("Apenas números decimais são permitidos");
+                showError("Apenas números decimais são permitidos.");
             }
         }
 
         private void validateIntegerInput(XgpManejoMelhoramentoComponent component, String value) {
-            if (isEmptyValue(value)) return;
+            if (isEmptyValue(value)) {
+                return;
+            }
 
             try {
                 int numericValue = Integer.parseInt(value);
-                validateRange(numericValue, component.getNotaInicial(), component.getNotaFinal());
+                Integer min = component.getInitialValue().map(Number::intValue).orElse(null);
+                Integer max = component.getFinalValue().map(Number::intValue).orElse(null);
+                validateRange(numericValue, min, max);
             } catch (NumberFormatException e) {
-                showError("Apenas números inteiros são permitidos");
+                showError("Apenas números inteiros são permitidos.");
             }
         }
 
@@ -266,16 +322,27 @@ public class XgpManejoMelhoramentoAdapter extends RecyclerView.Adapter<XgpManejo
             return false;
         }
 
-        private void validateRange(double value, Integer min, Integer max) {
+        private void validateRange(double value, Double min, Double max) {
             if (min == null || max == null) {
                 showValid();
                 return;
             }
-
             if (value >= min && value <= max) {
                 showValid();
             } else {
-                showError(String.format("Deve estar entre %s e %s", min, max));
+                showError(String.format("Deve estar entre %s e %s.", min, max));
+            }
+        }
+
+        private void validateRange(int value, Integer min, Integer max) {
+            if (min == null || max == null) {
+                showValid();
+                return;
+            }
+            if (value >= min && value <= max) {
+                showValid();
+            } else {
+                showError(String.format("Deve estar entre %s e %s.", min, max));
             }
         }
 

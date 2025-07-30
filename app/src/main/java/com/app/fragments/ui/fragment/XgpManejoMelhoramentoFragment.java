@@ -3,6 +3,7 @@ package com.app.fragments.ui.fragment;
 import android.os.Bundle;
 import android.view.View;
 import android.app.AlertDialog;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,6 +20,7 @@ import com.google.android.material.button.MaterialButton;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
@@ -30,6 +32,7 @@ public class XgpManejoMelhoramentoFragment extends Fragment {
     private final List<XgpManejoMelhoramentoComponent> components = new ArrayList<>();
 
     private Long melhoramentoId;
+    private TextView nomeMelhoramento;
     private RecyclerView recyclerView;
     private XgpManejoMelhoramentoAdapter adapter;
 
@@ -70,6 +73,7 @@ public class XgpManejoMelhoramentoFragment extends Fragment {
     }
 
     private void setupRecyclerView() {
+        nomeMelhoramento = requireView().findViewById(R.id.nome_melhoramento);
         recyclerView = requireView().findViewById(R.id.recyclerViewXgpManejoMelhoramento);
         adapter = new XgpManejoMelhoramentoAdapter(requireContext(), components);
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
@@ -84,11 +88,23 @@ public class XgpManejoMelhoramentoFragment extends Fragment {
         loadCharacteristics()
                 .thenCompose(this::processCharacteristics)
                 .thenRun(this::onDataLoaded)
+                .thenRun(this::loadNameMelhoramento)
                 .exceptionally(this::handleLoadError);
     }
 
     private boolean isValidMelhoramentoId() {
         return melhoramentoId != null && melhoramentoId != -1L;
+    }
+
+    private void loadNameMelhoramento(){
+        Melhoramento melhoramento =  service.getMelhoramentoByIdAsync(melhoramentoId).join();
+        runOnUiThread(() -> {
+            if (melhoramento != null) {
+                nomeMelhoramento.setText(melhoramento.getNome());
+            } else {
+                nomeMelhoramento.setText("Melhoramento não encontrado");
+            }
+        });
     }
 
     private CompletableFuture<List<Caracteristica>> loadCharacteristics() {
@@ -117,15 +133,15 @@ public class XgpManejoMelhoramentoFragment extends Fragment {
 
     private XgpManejoMelhoramentoComponent createComponent(Caracteristica c) {
         return new XgpManejoMelhoramentoComponent(
-                c.getIdCaracteristica(),
-                c.getDescricao(),
+                c.getIdCharacteristic(),
+                c.getDescription(),
                 c.getSigla(),
-                c.getTipoDado(),
+                c.getType(),
                 null,
-                c.getExcessao(),
-                c.getNotaInicial(),
-                c.getNotaFinal(),
-                c.getEhObservacao()
+                Optional.ofNullable(c.getListOptions()),
+                Optional.ofNullable(c.getInitialValue()),
+                Optional.ofNullable(c.getFinalValue()),
+                c.getIsObservation()
         );
     }
 
@@ -165,7 +181,7 @@ public class XgpManejoMelhoramentoFragment extends Fragment {
     }
 
     private boolean isAnyFieldFilled() {
-        return components.stream().anyMatch(c -> !isEmptyValue(c.getValorDigitado()));
+        return components.stream().anyMatch(c -> !isEmptyValue(c.getValue()));
     }
 
     private void handleValidationResult(boolean allValid) {
@@ -180,7 +196,7 @@ public class XgpManejoMelhoramentoFragment extends Fragment {
 
     private CompletableFuture<Boolean> validateAllFilledComponentsAsync() {
         List<CompletableFuture<Boolean>> validationFutures = components.stream()
-                .filter(c -> !isEmptyValue(c.getValorDigitado()))
+                .filter(c -> !isEmptyValue(c.getValue()))
                 .map(this::validateComponentAsync)
                 .collect(Collectors.toList());
 
@@ -193,10 +209,10 @@ public class XgpManejoMelhoramentoFragment extends Fragment {
             return CompletableFuture.completedFuture(true);
         }
 
-        return findMatchingObservations(component.getValorDigitado())
+        return findMatchingObservations(component.getValue())
                 .thenApply(matchingObservations -> {
                     if (matchingObservations.isEmpty()) {
-                        showError("Valor '" + component.getValorDigitado() + "' para '" + component.getCaracteristica() + "' não contém uma observação válida.");
+                        showError("Valor '" + component.getValue() + "' para '" + component.getCharacteristic() + "' não contém uma observação válida.");
                         return false;
                     }
                     return true;
@@ -204,7 +220,7 @@ public class XgpManejoMelhoramentoFragment extends Fragment {
     }
 
     private boolean isObservationField(XgpManejoMelhoramentoComponent component) {
-        return "s".equalsIgnoreCase(component.getEhObservacao());
+        return "s".equalsIgnoreCase(component.getIsObservation());
     }
 
     private CompletableFuture<List<Observacao>> findMatchingObservations(String value) {
@@ -234,7 +250,7 @@ public class XgpManejoMelhoramentoFragment extends Fragment {
 
     private List<ManejoMelhoramento> prepareDataForSave() {
         return components.stream()
-                .filter(c -> !isEmptyValue(c.getValorDigitado()))
+                .filter(c -> !isEmptyValue(c.getValue()))
                 .map(this::convertToEntity)
                 .collect(Collectors.toList());
     }
@@ -242,10 +258,10 @@ public class XgpManejoMelhoramentoFragment extends Fragment {
     private ManejoMelhoramento convertToEntity(XgpManejoMelhoramentoComponent component) {
         return new ManejoMelhoramento(
                 melhoramentoId,
-                component.getId(),
-                component.getValorDigitado(),
-                component.getExcessao(),
-                isObservationField(component) ? component.getValorDigitado() : null
+                component.getIdCharacteristic(),
+                component.getValue(),
+                null,
+                isObservationField(component) ? component.getValue() : null
         );
     }
 
